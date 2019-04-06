@@ -16,10 +16,16 @@ Toolkit.run(
       repo: tools.context.payload.repository.name
     }
 
+    console.log(tools.context.payload.pull_request.number)
+    console.log(tools.context.ref)
+    console.log(repoInfo)
+
     const config = {
       ...defaults,
       ...(await getConfig(tools.github, CONFIG_FILENAME, repoInfo))
     }
+
+    console.log(config)
 
     const labelsToAdd = Object.entries(config).reduce(
       (labels, [label, patterns]) => {
@@ -35,6 +41,8 @@ Toolkit.run(
       },
       []
     )
+
+    console.log(labelsToAdd)
 
     if (labelsToAdd.length > 0) {
       await tools.github.issues.addLabels({
