@@ -2,7 +2,7 @@ const { Toolkit } = require('actions-toolkit')
 const getConfig = require('./utils/config')
 const wildcard = require('wildcard')
 
-const CONFIG_FILENAME = 'config.yml'
+const CONFIG_FILENAME = 'pr-labeler.yml'
 const defaults = {
   patterns: [
     { branch: 'feature/*', label: 'feature' },
