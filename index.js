@@ -4,11 +4,9 @@ const wildcard = require('wildcard')
 
 const CONFIG_FILENAME = 'pr-labeler.yml'
 const defaults = {
-  patterns: [
-    { branch: 'feature/*', label: 'feature' },
-    { branch: 'fix/*', label: 'fix' },
-    { branch: 'chore/*', label: 'chore' }
-  ]
+  feature: ['feature/*', 'feat/*'],
+  fix: 'fix/*',
+  chore: 'chore/*'
 }
 
 Toolkit.run(
@@ -18,17 +16,25 @@ Toolkit.run(
       repo: tools.context.payload.repository.name
     }
 
-    const config = Object.assign(
-      defaults,
-      await getConfig(tools.github, CONFIG_FILENAME, repoInfo)
-    )
+    const config = {
+      ...defaults,
+      ...(await getConfig(tools.github, CONFIG_FILENAME, repoInfo))
+    }
 
-    const labelsToAdd = config.patterns.reduce((labels, pattern) => {
-      if (wildcard(pattern.branch, tools.context.ref)) {
-        labels = labels.concat(pattern.label)
-      }
-      return labels
-    }, [])
+    const labelsToAdd = Object.entries(config).reduce(
+      (labels, [label, patterns]) => {
+        if (
+          Array.isArray(patterns)
+            ? patterns.some(pattern => wildcard(pattern, tools.context.ref))
+            : wildcard(patterns, tools.context.ref)
+        ) {
+          labels.push(label)
+        }
+
+        return labels
+      },
+      []
+    )
 
     if (labelsToAdd.length > 0) {
       await tools.github.issues.addLabels({

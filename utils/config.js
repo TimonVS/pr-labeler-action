@@ -3,6 +3,9 @@ const yaml = require('js-yaml')
 
 const CONFIG_PATH = '.github'
 
+/**
+ * @returns {Promise<Object.<string, string | string[]>>}
+ */
 module.exports = async function getConfig(github, fileName, { owner, repo }) {
   try {
     const response = await github.repos.getContents({

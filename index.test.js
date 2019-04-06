@@ -23,7 +23,7 @@ describe('branch-autolabeler', () => {
 
   it('adds the "fix" label for "fix/510-logging" branch', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/config.yml')
+      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
@@ -43,7 +43,7 @@ describe('branch-autolabeler', () => {
 
   it('adds the "feature" label for "feature/sign-in-page/101" branch', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/config.yml')
+      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
@@ -63,7 +63,7 @@ describe('branch-autolabeler', () => {
 
   it('uses the default config when no config was provided', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/config.yml')
+      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml')
       .reply(404)
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
@@ -83,7 +83,7 @@ describe('branch-autolabeler', () => {
 
   it("adds no labels if the branch doesn't match any patterns", async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/config.yml')
+      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         throw new Error("Shouldn't edit labels")
