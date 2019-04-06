@@ -1,0 +1,18 @@
+{
+  "name": "pr-labeler",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "actions-toolkit": "^2.0.0",
+    "wildcard": "^1.1.2"
+  },
+  "devDependencies": {
+    "jest": "^24.5.0",
+    "js-yaml": "^3.13.1",
+    "nock": "^10.0.6"
+  }
+}

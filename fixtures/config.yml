@@ -1,0 +1,7 @@
+patterns:
+  - branch: feature/*
+    label: feature
+  - branch: fix/*
+    label: fix
+  - branch: chore/*
+    label: chore
