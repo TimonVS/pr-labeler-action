@@ -12,7 +12,7 @@ FROM node:slim
 
 # Labels for GitHub to read your action
 LABEL "com.github.actions.name"="PR Labeler"
-LABEL "com.github.actions.description"="Automatically labels your PRs based on branchname patterns like \"feature/*\" or \"fix/*\"."
+LABEL "com.github.actions.description"="Automatically labels your PRs based on branch name patterns like \"feature/*\" or \"fix/*\"."
 # Here are all of the available icons: https://feathericons.com/
 LABEL "com.github.actions.icon"="tag"
 # And all of the available colors: https://developer.github.com/actions/creating-github-actions/creating-a-docker-container/#label
