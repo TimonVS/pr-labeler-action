@@ -46,5 +46,5 @@ Toolkit.run(
 
     tools.exit.success()
   },
-  { event: 'pull_requests.opened', secrets: ['GITHUB_TOKEN'] }
+  { event: 'pull_request.opened', secrets: ['GITHUB_TOKEN'] }
 )
