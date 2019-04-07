@@ -1,6 +1,7 @@
 # PR Labeler
 
-> A GitHub Action that automatically applies labels to your PRs based on branch name patterns like `feature/*` or `fix/*`.
+A GitHub Action that automatically applies labels to your PRs based on branch name patterns like `feature/*` or `fix/*`.
+Can be used in combination with [Release Drafter](https://github.com/toolmantim/release-drafter) to automatically [categorize pull requests](https://github.com/toolmantim/release-drafter#categorize-pull-requests).
 
 ## Usage
 
