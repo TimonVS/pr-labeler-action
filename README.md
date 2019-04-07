@@ -4,6 +4,22 @@
 
 ## Usage
 
+Add `.github/main.workflow` with the following:
+
+```
+workflow "Add label to PR" {
+  on = "pull_request"
+  resolves = "PR Labeler"
+}
+
+action "PR Labeler" {
+  uses = "TimonVS/pr-labeler@master"
+  secrets = ["GITHUB_TOKEN"]
+}
+```
+
+## Configuration
+
 Configure by creating a `.github/pr-labeler.yml` file.
 
 For example:
