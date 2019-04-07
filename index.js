@@ -15,9 +15,10 @@ Toolkit.run(
       owner: tools.context.payload.repository.owner.login,
       repo: tools.context.payload.repository.name
     }
+    const ref = tools.context.payload.pull_request.head.ref
 
+    console.log(ref)
     console.log(tools.context.payload.pull_request.number)
-    console.log(tools.context.ref)
     console.log(repoInfo)
 
     const config = {
@@ -31,8 +32,8 @@ Toolkit.run(
       (labels, [label, patterns]) => {
         if (
           Array.isArray(patterns)
-            ? patterns.some(pattern => wildcard(pattern, tools.context.ref))
-            : wildcard(patterns, tools.context.ref)
+            ? patterns.some(pattern => wildcard(pattern, ref))
+            : wildcard(patterns, ref)
         ) {
           labels.push(label)
         }

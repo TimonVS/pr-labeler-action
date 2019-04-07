@@ -33,8 +33,7 @@ describe('branch-autolabeler', () => {
       })
       .reply(200)
 
-    tools.context.ref = 'fix/510-logging'
-    tools.context.payload = pullRequestOpenedFixture()
+    tools.context.payload = pullRequestOpenedFixture({ ref: 'fix/510-logging' })
 
     await action(tools)
     expect(tools.exit.success).toHaveBeenCalled()
@@ -53,8 +52,9 @@ describe('branch-autolabeler', () => {
       })
       .reply(200)
 
-    tools.context.ref = 'feature/sign-in-page/101'
-    tools.context.payload = pullRequestOpenedFixture()
+    tools.context.payload = pullRequestOpenedFixture({
+      ref: 'feature/sign-in-page/101'
+    })
 
     await action(tools)
     expect(tools.exit.success).toHaveBeenCalled()
@@ -73,8 +73,7 @@ describe('branch-autolabeler', () => {
       })
       .reply(200)
 
-    tools.context.ref = 'fix/510-logging'
-    tools.context.payload = pullRequestOpenedFixture()
+    tools.context.payload = pullRequestOpenedFixture({ ref: 'fix/510-logging' })
 
     await action(tools)
     expect(tools.exit.success).toHaveBeenCalled()
@@ -90,8 +89,7 @@ describe('branch-autolabeler', () => {
       })
       .reply(200)
 
-    tools.context.ref = 'hello_world'
-    tools.context.payload = pullRequestOpenedFixture()
+    tools.context.payload = pullRequestOpenedFixture({ ref: 'hello_world' })
 
     await action(tools)
     expect(tools.exit.success).toHaveBeenCalled()
@@ -130,10 +128,13 @@ function configFixture(fileName = 'config.yml') {
   }
 }
 
-function pullRequestOpenedFixture() {
+function pullRequestOpenedFixture({ ref }) {
   return {
     pull_request: {
-      number: 1
+      number: 1,
+      head: {
+        ref
+      }
     },
     repository: {
       name: 'Hello-World',
