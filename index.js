@@ -1,6 +1,6 @@
 const { Toolkit } = require('actions-toolkit')
 const getConfig = require('./utils/config')
-const wildcard = require('wildcard')
+const matcher = require('matcher')
 
 const CONFIG_FILENAME = 'pr-labeler.yml'
 const defaults = {
@@ -25,8 +25,8 @@ Toolkit.run(
       (labels, [label, patterns]) => {
         if (
           Array.isArray(patterns)
-            ? patterns.some(pattern => wildcard(pattern, ref))
-            : wildcard(patterns, ref)
+            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
+            : matcher.isMatch(ref, patterns)
         ) {
           labels.push(label)
         }
