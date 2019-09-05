@@ -5,24 +5,19 @@ Can be used in combination with [Release Drafter](https://github.com/toolmantim/
 
 ## Usage
 
-Add `.github/main.workflow` with the following:
+Add `.github/workflows/pr-labeler.yml` with the following:
 
-```
-workflow "Add label to PR" {
-  on = "pull_request"
-  resolves = "PR Labeler"
-}
-
-action "PR opened filter" {
-  uses = "actions/bin/filter@master"
-  args = "action opened"
-}
-
-action "PR Labeler" {
-  needs = "PR opened filter"
-  uses = "TimonVS/pr-labeler@master"
-  secrets = ["GITHUB_TOKEN"]
-}
+```yml
+name: Label PRs
+on: [pull_request]
+jobs:
+  pr-labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: TimonVS/pr-labeler@master
+        if: github.event.action == 'opened'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ## Configuration
@@ -35,6 +30,11 @@ For example:
 feature: ['feature/*', 'feat/*']
 fix: fix/*
 chore: chore/*
+fixed-branch: fixed-branch-name
 ```
 
 Then if a pull request is opened with the branch name `feature/218-add-emoji-support` the Action will automatically apply the `feature` label.
+
+### Wildcard branches in configuration
+
+You can use `*` as a wildcard for matching multiple branch names. See https://www.npmjs.com/package/matcher for more information about wildcard options.
