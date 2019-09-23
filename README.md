@@ -8,14 +8,16 @@ Can be used in combination with [Release Drafter](https://github.com/toolmantim/
 Add `.github/workflows/pr-labeler.yml` with the following:
 
 ```yml
-name: Label PRs
-on: [pull_request]
+name: PR Labeler
+on:
+  pull_request:
+    types: [opened]
+
 jobs:
   pr-labeler:
     runs-on: ubuntu-latest
     steps:
-      - uses: TimonVS/pr-labeler@master
-        if: github.event.action == 'opened'
+      - uses: TimonVS/pr-labeler-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
