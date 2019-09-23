@@ -13,12 +13,12 @@ Toolkit.run(
   async tools => {
     const repoInfo = {
       owner: tools.context.payload.repository.owner.login,
-      repo: tools.context.payload.repository.name
+      repo: tools.context.payload.repository.name,
     }
     const ref = tools.context.payload.pull_request.head.ref
     const config = {
       ...defaults,
-      ...(await getConfig(tools.github, CONFIG_FILENAME, repoInfo))
+      ...(await getConfig(tools.github, CONFIG_FILENAME, repoInfo, ref))
     }
 
     const labelsToAdd = Object.entries(config).reduce(
