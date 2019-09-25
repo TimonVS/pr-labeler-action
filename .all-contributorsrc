@@ -16,6 +16,17 @@
         "test",
         "doc"
       ]
+    },
+    {
+      "login": "amacado",
+      "name": "Clemens Bastian",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/8781699?v=4",
+      "profile": "http://clemensbastian.de",
+      "contributions": [
+        "code",
+        "doc",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
