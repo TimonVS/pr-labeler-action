@@ -5,5 +5,5 @@ branding:
   icon: 'tag'
   color: 'white'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node12'
+  main: 'index.js'
