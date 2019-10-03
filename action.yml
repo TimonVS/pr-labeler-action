@@ -1,0 +1,9 @@
+name: 'PR Labeler'
+description: 'Automatically labels your PRs based on branch name patterns like feature/* or fix/*.'
+author: 'Timon van Spronsen'
+branding:
+  icon: 'tag'
+  color: 'white'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
