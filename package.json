@@ -1,10 +1,10 @@
 {
   "name": "pr-labeler-action",
   "private": true,
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "build": "ncc build index.js -o dist",
+    "build": "ncc build src/index.js -o dist",
     "test": "jest"
   },
   "dependencies": {

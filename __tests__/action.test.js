@@ -1,6 +1,6 @@
 const nock = require('nock')
 const fs = require('fs')
-const action = require('./action')
+const action = require('../src/action')
 
 nock.disableNetConnect()
 
