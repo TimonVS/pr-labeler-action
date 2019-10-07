@@ -34,6 +34,7 @@ async function action(context = github.context) {
       ...customConfig
     }
 
+    console.log(config);
     const labelsToAdd = Object.entries(config).reduce(
       (labels, [label, patterns]) => {
         if (
