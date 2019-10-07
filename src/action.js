@@ -28,13 +28,14 @@ async function action(context = github.context) {
     const ref = context.payload.pull_request.head.ref;
 
     var customConfig = await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref);
-    console.error(customConfig);
+    core.log(customConfig);
+    core.debug(customConfig);
     const config = {
       ...defaults,
       ...customConfig
     }
 
-    console.log(config);
+    core.warning(config);
     const labelsToAdd = Object.entries(config).reduce(
       (labels, [label, patterns]) => {
         if (
