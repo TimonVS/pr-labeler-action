@@ -25,10 +25,13 @@ async function action(context = github.context) {
       )
     }
 
-    const ref = context.payload.pull_request.head.ref
+    const ref = context.payload.pull_request.head.ref;
+
+    var customConfig = await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref);
+    console.log(customConfig);
     const config = {
       ...defaults,
-      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
+      ...customConfig
     }
 
     const labelsToAdd = Object.entries(config).reduce(
