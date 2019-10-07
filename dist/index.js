@@ -34,7 +34,7 @@ module.exports =
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(104);
+/******/ 		return __webpack_require__(676);
 /******/ 	};
 /******/
 /******/ 	// run startup
@@ -113,6 +113,43 @@ const osName = (platform, release) => {
 };
 
 module.exports = osName;
+
+
+/***/ }),
+
+/***/ 5:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const path = __webpack_require__(622)
+const yaml = __webpack_require__(414)
+
+const CONFIG_PATH = '.github'
+
+/**
+ * @returns {Promise<Object.<string, string | string[]>>}
+ */
+module.exports = async function getConfig(github, fileName, { owner, repo }, ref) {
+  try {
+    const response = await github.repos.getContents({
+      owner,
+      repo,
+      path: path.posix.join(CONFIG_PATH, fileName),
+      ref
+    })
+
+    return parseConfig(response.data.content)
+  } catch (error) {
+    if (error.code === 404) {
+      return null
+    }
+
+    throw error
+  }
+}
+
+function parseConfig(content) {
+  return yaml.safeLoad(Buffer.from(content, 'base64').toString()) || {}
+}
 
 
 /***/ }),
@@ -1049,16 +1086,6 @@ module.exports = new Type('tag:yaml.org,2002:set', {
   resolve: resolveYamlSet,
   construct: constructYamlSet
 });
-
-
-/***/ }),
-
-/***/ 104:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
-
-const action = __webpack_require__(751)
-
-action()
 
 
 /***/ }),
@@ -9218,43 +9245,6 @@ module.exports = withDefaults(request, {
 
 /***/ }),
 
-/***/ 505:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const path = __webpack_require__(622)
-const yaml = __webpack_require__(414)
-
-const CONFIG_PATH = '.github'
-
-/**
- * @returns {Promise<Object.<string, string | string[]>>}
- */
-module.exports = async function getConfig(github, fileName, { owner, repo }, ref) {
-  try {
-    const response = await github.repos.getContents({
-      owner,
-      repo,
-      path: path.posix.join(CONFIG_PATH, fileName),
-      ref
-    })
-
-    return parseConfig(response.data.content)
-  } catch (error) {
-    if (error.code === 404) {
-      return null
-    }
-
-    throw error
-  }
-}
-
-function parseConfig(content) {
-  return yaml.safeLoad(Buffer.from(content, 'base64').toString()) || {}
-}
-
-
-/***/ }),
-
 /***/ 509:
 /***/ (function(module) {
 
@@ -10092,6 +10082,16 @@ function authenticate (state, options) {
 module.exports = function btoa(str) {
   return new Buffer(str).toString('base64')
 }
+
+
+/***/ }),
+
+/***/ 676:
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+
+const action = __webpack_require__(928)
+
+action()
 
 
 /***/ }),
@@ -11307,79 +11307,6 @@ function defaultOptions (defaults, route, options) {
 /***/ (function(module) {
 
 module.exports = require("fs");
-
-/***/ }),
-
-/***/ 751:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const core = __webpack_require__(470)
-const github = __webpack_require__(469)
-const matcher = __webpack_require__(167)
-const getConfig = __webpack_require__(505)
-
-const CONFIG_FILENAME = 'pr-labeler.yml'
-const defaults = {
-  feature: ['feature/*', 'feat/*'],
-  fix: 'fix/*',
-  chore: 'chore/*'
-}
-
-async function action(context = github.context) {
-  try {
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN
-    const octokit = new github.GitHub(GITHUB_TOKEN)
-    const repoInfo = {
-      owner: context.payload.repository.owner.login,
-      repo: context.payload.repository.name
-    }
-
-    if (!context.payload.pull_request) {
-      throw new Error(
-        "Payload doesn't contain `pull_request`. Make sure this Action is being triggered by a pull_request event (https://help.github.com/en/articles/events-that-trigger-workflows#pull-request-event-pull_request)."
-      )
-    }
-
-    const ref = context.payload.pull_request.head.ref
-    const config = {
-      ...defaults,
-      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
-    }
-
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels, [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
-
-        return labels
-      },
-      []
-    )
-
-    if (labelsToAdd.length > 0) {
-      await octokit.issues.addLabels({
-        number: context.payload.pull_request.number,
-        labels: labelsToAdd,
-        ...repoInfo
-      })
-    }
-  } catch (error) {
-    if (process.env.NODE_ENV === 'test') {
-      throw error
-    }
-
-    core.error(error)
-    core.setFailed(error.message)
-  }
-}
-
-module.exports = action
-
 
 /***/ }),
 
@@ -14568,6 +14495,79 @@ module.exports = new Type('tag:yaml.org,2002:seq', {
   kind: 'sequence',
   construct: function (data) { return data !== null ? data : []; }
 });
+
+
+/***/ }),
+
+/***/ 928:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(470)
+const github = __webpack_require__(469)
+const matcher = __webpack_require__(167)
+const getConfig = __webpack_require__(5)
+
+const CONFIG_FILENAME = 'pr-labeler.yml'
+const defaults = {
+  feature: ['feature/*', 'feat/*'],
+  fix: 'fix/*',
+  chore: 'chore/*'
+}
+
+async function action(context = github.context) {
+  try {
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN
+    const octokit = new github.GitHub(GITHUB_TOKEN)
+    const repoInfo = {
+      owner: context.payload.repository.owner.login,
+      repo: context.payload.repository.name
+    }
+
+    if (!context.payload.pull_request) {
+      throw new Error(
+        "Payload doesn't contain `pull_request`. Make sure this Action is being triggered by a pull_request event (https://help.github.com/en/articles/events-that-trigger-workflows#pull-request-event-pull_request)."
+      )
+    }
+
+    const ref = context.payload.pull_request.head.ref
+    const config = {
+      ...defaults,
+      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
+    }
+
+    const labelsToAdd = Object.entries(config).reduce(
+      (labels, [label, patterns]) => {
+        if (
+          Array.isArray(patterns)
+            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
+            : matcher.isMatch(ref, patterns)
+        ) {
+          labels.push(label)
+        }
+
+        return labels
+      },
+      []
+    )
+
+    if (labelsToAdd.length > 0) {
+      await octokit.issues.addLabels({
+        number: context.payload.pull_request.number,
+        labels: labelsToAdd,
+        ...repoInfo
+      })
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'test') {
+      throw error
+    }
+
+    core.error(error)
+    core.setFailed(error.message)
+  }
+}
+
+module.exports = action
 
 
 /***/ }),
