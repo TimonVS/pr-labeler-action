@@ -3,7 +3,6 @@ const github = require('@actions/github')
 const matcher = require('matcher')
 const getConfig = require('./utils/config')
 
-const CONFIG_FILENAME = 'pr-labeler.yml'
 const defaults = {
   feature: ['feature/*', 'feat/*'],
   fix: 'fix/*',
@@ -12,6 +11,13 @@ const defaults = {
 
 async function action(context = github.context) {
   try {
+
+    var customConfigFile = '.github/pr-labeler.yml'; // default path of config file
+    // if env variable CONFIG_FILENAME isset use it as the path to a custom pr-labeler config yml
+    if(process.env.CONFIG_FILENAME !== null) {
+        customConfigFile = process.env.CONFIG_FILENAME;
+    }
+
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN
     const octokit = new github.GitHub(GITHUB_TOKEN)
     const repoInfo = {
@@ -32,7 +38,7 @@ async function action(context = github.context) {
      * set default config when no custom overwrite exists
      */
     var config = defaults;
-    var customConfig = await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref);
+    var customConfig = await getConfig(octokit, customConfigFile, repoInfo, ref);
     if(customConfig !== null) {
         config = customConfig;
     }
