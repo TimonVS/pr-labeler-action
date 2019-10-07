@@ -1,11 +1,13 @@
 const distPath = './dist/index.js'
-const errorMessage = `Please update .github/workflows/pr-labeler.yml to bind to a major version instead of master.
+const errorMessage = `ERROR: pr-labeler-action is configured incorrectly. Please update .github/workflows/pr-labeler.yml to bind to a major version instead of master.
 
 You can do so by changing:
 - uses: TimonVS/pr-labeler-action@master
 
 To:
 - uses: TimonVS/pr-labeler-action@v3
+
+Please check the repository (https://github.com/TimonVS/pr-labeler-action) for the latest version.
 `
 
 try {
