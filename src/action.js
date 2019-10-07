@@ -28,7 +28,7 @@ async function action(context = github.context) {
     const ref = context.payload.pull_request.head.ref;
 
     var customConfig = await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref);
-    console.log(customConfig);
+    console.error(customConfig);
     const config = {
       ...defaults,
       ...customConfig
