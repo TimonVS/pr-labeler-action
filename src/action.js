@@ -25,10 +25,16 @@ async function action(context = github.context) {
       )
     }
 
-    const ref = context.payload.pull_request.head.ref
-    const config = {
-      ...defaults,
-      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
+    const ref = context.payload.pull_request.head.ref;
+
+    /**
+     * load custom config when existing or
+     * set default config when no custom overwrite exists
+     */
+    var config = defaults;
+    var customConfig = await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref);
+    if(customConfig !== null) {
+        config = customConfig;
     }
 
     const labelsToAdd = Object.entries(config).reduce(
