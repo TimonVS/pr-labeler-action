@@ -27,9 +27,12 @@ async function action(context = github.context) {
 
     const ref = context.payload.pull_request.head.ref;
 
+    core.debug('MY DEBUG MESSAGE!!!!!!');
+
     var customConfig = await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref);
     core.log(customConfig);
     core.debug(customConfig);
+
     const config = {
       ...defaults,
       ...customConfig
