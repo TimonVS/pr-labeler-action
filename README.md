@@ -22,11 +22,13 @@ jobs:
       - uses: TimonVS/pr-labeler-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILENAME: ".github/pr-labeler.yml" # optional, .github/pr-labeler.yml is the default value
 ```
 
 ## Configuration
 
-Configure by creating a `.github/pr-labeler.yml` file.
+Configure by creating a `.github/pr-labeler.yml` file or choose another filename and path with setting `env.CONFIG_FILENAME` to a different value. When you dont
+create a filename at the default path (or your custom path) the [default configuration](#default-configuration) will be used.
 
 For example:
 
@@ -42,6 +44,16 @@ Then if a pull request is opened with the branch name `feature/218-add-emoji-sup
 ### Wildcard branches in configuration
 
 You can use `*` as a wildcard for matching multiple branch names. See https://www.npmjs.com/package/matcher for more information about wildcard options.
+
+### Default configuration
+
+When no custom configuration is set the following default configuration will be used:
+
+```yml
+feature: ['feature/*', 'feat/*'],
+fix: 'fix/*',
+chore: 'chore/*'
+```
 
 ## Contributors ✨
 
