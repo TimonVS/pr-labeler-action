@@ -12,7 +12,7 @@ module.exports = async function getConfig(github, fileName, { owner, repo }, ref
       owner,
       repo,
       path: path.posix.join(CONFIG_PATH, fileName),
-      ref: ref
+      ref
     })
 
     return parseConfig(response.data.content)

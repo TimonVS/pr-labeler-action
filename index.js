@@ -1,50 +1,27 @@
-const { Toolkit } = require('actions-toolkit')
-const getConfig = require('./utils/config')
-const matcher = require('matcher')
+const distPath = './dist/index.js'
+const errorMessage = `ERROR: since pr-labeler-action v3, binding to the master version is no longer supported. Please update .github/workflows/pr-labeler.yml to bind to a major version.
 
-const CONFIG_FILENAME = 'pr-labeler.yml'
-const defaults = {
-  feature: ['feature/*', 'feat/*'],
-  fix: 'fix/*',
-  chore: 'chore/*'
+You can do so by changing:
+- uses: TimonVS/pr-labeler-action@master
+
+To:
+- uses: TimonVS/pr-labeler-action@v3
+
+Please check the repository (https://github.com/TimonVS/pr-labeler-action) for the latest version.
+`
+
+try {
+  require(distPath)
+} catch (error) {
+  if (error.code !== 'MODULE_NOT_FOUND') {
+    // Re-throw not "Module not found" errors
+    throw error
+  }
+  if (error.message.indexOf(distPath) === -1) {
+    // Re-throw not found errors for other modules
+    throw error
+  }
+
+  console.error(errorMessage)
+  throw error
 }
-
-Toolkit.run(
-  async tools => {
-    const repoInfo = {
-      owner: tools.context.payload.repository.owner.login,
-      repo: tools.context.payload.repository.name
-    }
-    const ref = tools.context.payload.pull_request.head.ref
-    const config = {
-      ...defaults,
-      ...(await getConfig(tools.github, CONFIG_FILENAME, repoInfo, ref))
-    }
-
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels, [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
-
-        return labels
-      },
-      []
-    )
-
-    if (labelsToAdd.length > 0) {
-      await tools.github.issues.addLabels({
-        number: tools.context.payload.pull_request.number,
-        labels: labelsToAdd,
-        ...repoInfo
-      })
-    }
-
-    tools.exit.success()
-  },
-  { event: 'pull_request.opened', secrets: ['GITHUB_TOKEN'] }
-)
