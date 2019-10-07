@@ -1,4 +1,5 @@
 # PR Labeler
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 
 A GitHub Action that automatically applies labels to your PRs based on branch name patterns like `feature/*` or `fix/*`.
@@ -18,7 +19,7 @@ jobs:
   pr-labeler:
     runs-on: ubuntu-latest
     steps:
-      - uses: TimonVS/pr-labeler-action@v2
+      - uses: TimonVS/pr-labeler-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
