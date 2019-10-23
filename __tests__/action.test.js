@@ -35,7 +35,7 @@ describe('pr-labeler-action', () => {
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
-          labels: ['feature']
+          labels: ['🎉 feature']
         })
         return true
       })
