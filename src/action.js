@@ -11,11 +11,10 @@ const defaults = {
 
 async function action(context = github.context) {
   try {
-
-    var customConfigFile = '.github/pr-labeler.yml'; // default path of config file
+    var customConfigFile = '.github/pr-labeler.yml' // default path of config file
     // if env variable CONFIG_FILENAME isset use it as the path to a custom pr-labeler config yml
-    if(process.env.CONFIG_FILENAME !== null) {
-        customConfigFile = process.env.CONFIG_FILENAME;
+    if (process.env.CONFIG_FILENAME !== null) {
+      customConfigFile = process.env.CONFIG_FILENAME
     }
 
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN
@@ -31,32 +30,29 @@ async function action(context = github.context) {
       )
     }
 
-    const ref = context.payload.pull_request.head.ref;
+    const ref = context.payload.pull_request.head.ref
 
     /**
      * load custom config when existing or
      * set default config when no custom overwrite exists
      */
-    var config = defaults;
-    var customConfig = await getConfig(octokit, customConfigFile, repoInfo, ref);
-    if(customConfig !== null) {
-        config = customConfig;
+    var config = defaults
+    var customConfig = await getConfig(octokit, customConfigFile, repoInfo, ref)
+    if (customConfig !== null) {
+      config = customConfig
     }
 
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels, [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
+    const labelsToAdd = Object.entries(config).reduce((labels, [label, patterns]) => {
+      if (
+        Array.isArray(patterns)
+          ? patterns.some(pattern => matcher.isMatch(ref, pattern))
+          : matcher.isMatch(ref, patterns)
+      ) {
+        labels.push(label)
+      }
 
-        return labels
-      },
-      []
-    )
+      return labels
+    }, [])
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({
