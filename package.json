@@ -13,6 +13,7 @@
     "matcher": "^2.0.0"
   },
   "devDependencies": {
+    "@types/node": "^12.11.5",
     "@zeit/ncc": "^0.20.5",
     "jest": "^24.5.0",
     "js-yaml": "^3.13.1",

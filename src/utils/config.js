@@ -1,10 +1,9 @@
 const yaml = require('js-yaml')
 
-
 /**
  * @returns {Promise<Object.<string, string | string[]>>}
  */
-module.exports = async function getConfig(github, fileName, { owner, repo }, ref) {
+module.exports = async function getConfig(github, fileName, { owner, repo }, ref, defaultConfig) {
   try {
     const response = await github.repos.getContents({
       owner,
@@ -16,7 +15,7 @@ module.exports = async function getConfig(github, fileName, { owner, repo }, ref
     return parseConfig(response.data.content)
   } catch (error) {
     if (error.code === 404) {
-      return null
+      return defaultConfig
     }
 
     throw error

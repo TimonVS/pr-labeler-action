@@ -1,9 +1,11 @@
+// @ts-check
+
 const core = require('@actions/core')
 const github = require('@actions/github')
 const matcher = require('matcher')
 const getConfig = require('./utils/config')
 
-const defaults = {
+const defaultConfig = {
   feature: ['feature/*', 'feat/*'],
   fix: 'fix/*',
   chore: 'chore/*'
@@ -11,18 +13,13 @@ const defaults = {
 
 async function action(context = github.context) {
   try {
-    var customConfigFile = '.github/pr-labeler.yml' // default path of config file
-    // if env variable CONFIG_FILENAME isset use it as the path to a custom pr-labeler config yml
-    if (process.env.CONFIG_FILENAME !== null) {
-      customConfigFile = process.env.CONFIG_FILENAME
-    }
-
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN
     const octokit = new github.GitHub(GITHUB_TOKEN)
     const repoInfo = {
       owner: context.payload.repository.owner.login,
       repo: context.payload.repository.name
     }
+    const configPath = core.getInput('configuration-path', { required: true })
 
     if (!context.payload.pull_request) {
       throw new Error(
@@ -31,16 +28,7 @@ async function action(context = github.context) {
     }
 
     const ref = context.payload.pull_request.head.ref
-
-    /**
-     * load custom config when existing or
-     * set default config when no custom overwrite exists
-     */
-    var config = defaults
-    var customConfig = await getConfig(octokit, customConfigFile, repoInfo, ref)
-    if (customConfig !== null) {
-      config = customConfig
-    }
+    const config = await getConfig(octokit, configPath, repoInfo, ref, defaultConfig)
 
     const labelsToAdd = Object.entries(config).reduce((labels, [label, patterns]) => {
       if (
