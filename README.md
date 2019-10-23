@@ -20,15 +20,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: TimonVS/pr-labeler-action@v3
+        with:
+          configuration-path: .github/pr-labeler.yml # optional, .github/pr-labeler.yml is the default value
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONFIG_FILENAME: ".github/pr-labeler.yml" # optional, .github/pr-labeler.yml is the default value
 ```
 
 ## Configuration
 
-Configure by creating a `.github/pr-labeler.yml` file or choose another filename and path with setting `env.CONFIG_FILENAME` to a different value. When you dont
-create a filename at the default path (or your custom path) the [default configuration](#default-configuration) will be used.
+Configure by creating a `.github/pr-labeler.yml` file.
 
 For example:
 
@@ -47,7 +47,7 @@ You can use `*` as a wildcard for matching multiple branch names. See https://ww
 
 ### Default configuration
 
-When no custom configuration is set the following default configuration will be used:
+When no configuration is provided, the following defaults will be used:
 
 ```yml
 feature: ['feature/*', 'feat/*'],
