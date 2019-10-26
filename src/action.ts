@@ -12,7 +12,7 @@ const defaults = {
   chore: 'chore/*'
 }
 
-async function action(context: Pick<Context, 'payload'> = github.context) {
+async function action(context: Pick<Context, 'payload' | 'ref'> = github.context) {
   try {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
@@ -27,26 +27,23 @@ async function action(context: Pick<Context, 'payload'> = github.context) {
       )
     }
 
-    const ref: string = context.payload.pull_request.head.ref
     const config = {
       ...defaults,
-      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
+      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, context.ref))
     }
 
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels: string[], [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
+    const branchName: string = context.payload.pull_request.head.ref
+    const labelsToAdd = Object.entries(config).reduce((labels: string[], [label, patterns]) => {
+      if (
+        Array.isArray(patterns)
+          ? patterns.some(pattern => matcher.isMatch(branchName, pattern))
+          : matcher.isMatch(branchName, patterns)
+      ) {
+        labels.push(label)
+      }
 
-        return labels
-      },
-      []
-    )
+      return labels
+    }, [])
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({

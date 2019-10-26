@@ -18,7 +18,8 @@ describe('pr-labeler-action', () => {
       .reply(200)
 
     await action({
-      payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' })
+      payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' }),
+      ref: 'fix/510-logging'
     })
     expect.assertions(1)
   })
@@ -36,7 +37,8 @@ describe('pr-labeler-action', () => {
       .reply(200)
 
     await action({
-      payload: pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' })
+      payload: pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' }),
+      ref: 'feature/sign-in-page/101'
     })
     expect.assertions(1)
   })
@@ -54,7 +56,8 @@ describe('pr-labeler-action', () => {
       .reply(200)
 
     await action({
-      payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' })
+      payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' }),
+      ref: 'fix/510-logging'
     })
     expect.assertions(1)
   })
@@ -69,7 +72,8 @@ describe('pr-labeler-action', () => {
       .reply(200)
 
     await action({
-      payload: pullRequestOpenedFixture({ ref: 'hello_world' })
+      payload: pullRequestOpenedFixture({ ref: 'hello_world' }),
+      ref: 'hello_world'
     })
   })
 })
