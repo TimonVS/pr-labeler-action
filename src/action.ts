@@ -12,9 +12,18 @@ const defaults = {
   chore: 'chore/*'
 }
 
-async function action(context: Pick<Context, 'payload'> = github.context) {
+async function action(context = github.context) {
   try {
-    core.debug(JSON.stringify(context.payload))
+    core.info(JSON.stringify(context.payload))
+
+    core.info(context.payload.repository!.owner.login)
+    core.info(context.repo.owner)
+
+    core.info(context.payload.repository!.name)
+    core.info(context.repo.repo)
+
+    core.info(context.payload.pull_request!.head.ref)
+    core.info(context.ref)
 
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
