@@ -1,6 +1,6 @@
 # PR Labeler
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
 
 A GitHub Action that automatically applies labels to your PRs based on branch name patterns like `feature/*` or `fix/*`.
 Can be used in combination with [Release Drafter](https://github.com/toolmantim/release-drafter) to automatically [categorize pull requests](https://github.com/toolmantim/release-drafter#categorize-pull-requests).
@@ -53,6 +53,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="http://www.timonvanspronsen.nl/"><img src="https://avatars2.githubusercontent.com/u/876666?v=4" width="100px;" alt="Timon van Spronsen"/><br /><sub><b>Timon van Spronsen</b></sub></a><br /><a href="https://github.com/TimonVS/pr-labeler-action/commits?author=TimonVS" title="Code">💻</a> <a href="#ideas-TimonVS" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/TimonVS/pr-labeler-action/commits?author=TimonVS" title="Tests">⚠️</a> <a href="https://github.com/TimonVS/pr-labeler-action/commits?author=TimonVS" title="Documentation">📖</a></td>
     <td align="center"><a href="http://clemensbastian.de"><img src="https://avatars2.githubusercontent.com/u/8781699?v=4" width="100px;" alt="Clemens Bastian"/><br /><sub><b>Clemens Bastian</b></sub></a><br /><a href="https://github.com/TimonVS/pr-labeler-action/commits?author=amacado" title="Code">💻</a> <a href="https://github.com/TimonVS/pr-labeler-action/commits?author=amacado" title="Documentation">📖</a> <a href="https://github.com/TimonVS/pr-labeler-action/issues?q=author%3Aamacado" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/hugo-vrijswijk"><img src="https://avatars3.githubusercontent.com/u/10114577?v=4" width="100px;" alt="Hugo van Rijswijk"/><br /><sub><b>Hugo van Rijswijk</b></sub></a><br /><a href="https://github.com/TimonVS/pr-labeler-action/commits?author=hugo-vrijswijk" title="Code">💻</a></td>
   </tr>
 </table>
 
