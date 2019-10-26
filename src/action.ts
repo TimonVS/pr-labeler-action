@@ -1,4 +1,4 @@
-import core from '@actions/core'
+import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { Context } from '@actions/github/lib/context'
 import matcher from 'matcher'
@@ -14,6 +14,8 @@ const defaults = {
 
 async function action(context: Pick<Context, 'payload'> = github.context) {
   try {
+    core.debug(JSON.stringify(context.payload))
+
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
     const repoInfo: RepoInfo = {
@@ -33,20 +35,17 @@ async function action(context: Pick<Context, 'payload'> = github.context) {
       ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
     }
 
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels: string[], [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
+    const labelsToAdd = Object.entries(config).reduce((labels: string[], [label, patterns]) => {
+      if (
+        Array.isArray(patterns)
+          ? patterns.some(pattern => matcher.isMatch(ref, pattern))
+          : matcher.isMatch(ref, patterns)
+      ) {
+        labels.push(label)
+      }
 
-        return labels
-      },
-      []
-    )
+      return labels
+    }, [])
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({
