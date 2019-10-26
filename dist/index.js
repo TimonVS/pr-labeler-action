@@ -9867,7 +9867,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(__webpack_require__(622));
 const js_yaml_1 = __importDefault(__webpack_require__(414));
 const CONFIG_PATH = '.github';
-;
 function getConfig(github, fileName, { owner, repo }, ref) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -15193,7 +15192,7 @@ function action(context = github.context) {
             if (!context.payload.pull_request) {
                 throw new Error("Payload doesn't contain `pull_request`. Make sure this Action is being triggered by a pull_request event (https://help.github.com/en/articles/events-that-trigger-workflows#pull-request-event-pull_request).");
             }
-            const config = Object.assign(Object.assign({}, defaults), (yield config_1.default(octokit, CONFIG_FILENAME, repoInfo, context.ref)));
+            const config = Object.assign(Object.assign({}, defaults), (yield config_1.default(octokit, CONFIG_FILENAME, repoInfo, github.context.sha)));
             const branchName = context.payload.pull_request.head.ref;
             const labelsToAdd = Object.entries(config).reduce((labels, [label, patterns]) => {
                 if (Array.isArray(patterns)
