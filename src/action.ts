@@ -33,20 +33,17 @@ async function action(context: Pick<Context, 'payload'> = github.context) {
       ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
     }
 
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels: string[], [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
+    const labelsToAdd = Object.entries(config).reduce((labels: string[], [label, patterns]) => {
+      if (
+        Array.isArray(patterns)
+          ? patterns.some(pattern => matcher.isMatch(ref, pattern))
+          : matcher.isMatch(ref, patterns)
+      ) {
+        labels.push(label)
+      }
 
-        return labels
-      },
-      []
-    )
+      return labels
+    }, [])
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({
