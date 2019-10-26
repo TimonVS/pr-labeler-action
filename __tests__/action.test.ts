@@ -1,5 +1,6 @@
 import nock from 'nock'
 import fs from 'fs'
+import path from 'path'
 import action from '../src/action'
 
 nock.disableNetConnect()
@@ -85,7 +86,7 @@ function configFixture(fileName = 'config.yml') {
     size: 5362,
     name: fileName,
     path: `.github/${fileName}`,
-    content: encodeContent(fs.readFileSync(`./fixtures/${fileName}`)),
+    content: encodeContent(fs.readFileSync(path.join(__dirname, `fixtures/${fileName}`))),
     sha: '3d21ec53a331a6f037a91c368710b99387d012c1',
     url: 'https://api.github.com/repos/octokit/octokit.rb/contents/.github/release-drafter.yml',
     git_url: 'https://api.github.com/repos/octokit/octokit.rb/git/blobs/3d21ec53a331a6f037a91c368710b99387d012c1',
