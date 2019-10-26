@@ -1,6 +1,6 @@
-const nock = require('nock')
-const fs = require('fs')
-const action = require('../src/action')
+import nock from 'nock'
+import fs from 'fs'
+import action from '../src/action'
 
 nock.disableNetConnect()
 
@@ -74,7 +74,7 @@ describe('pr-labeler-action', () => {
   })
 })
 
-function encodeContent(content) {
+function encodeContent(content: Buffer) {
   return Buffer.from(content).toString('base64')
 }
 
@@ -99,7 +99,7 @@ function configFixture(fileName = 'config.yml') {
   }
 }
 
-function pullRequestOpenedFixture({ ref }) {
+function pullRequestOpenedFixture({ ref }: { ref: string }) {
   return {
     pull_request: {
       number: 1,

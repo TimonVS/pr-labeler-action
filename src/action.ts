@@ -1,7 +1,9 @@
-const core = require('@actions/core')
-const github = require('@actions/github')
-const matcher = require('matcher')
-const getConfig = require('./utils/config')
+import core from '@actions/core'
+import * as github from '@actions/github'
+import { Context } from '@actions/github/lib/context'
+import matcher from 'matcher'
+import getConfig from './utils/config'
+import { RepoInfo } from './utils/config'
 
 const CONFIG_FILENAME = 'pr-labeler.yml'
 const defaults = {
@@ -10,13 +12,13 @@ const defaults = {
   chore: 'chore/*'
 }
 
-async function action(context = github.context) {
+async function action(context: Pick<Context, 'payload'> = github.context) {
   try {
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
-    const repoInfo = {
-      owner: context.payload.repository.owner.login,
-      repo: context.payload.repository.name
+    const repoInfo: RepoInfo = {
+      owner: context.payload.repository!.owner.login,
+      repo: context.payload.repository!.name
     }
 
     if (!context.payload.pull_request) {
@@ -25,14 +27,14 @@ async function action(context = github.context) {
       )
     }
 
-    const ref = context.payload.pull_request.head.ref
+    const ref: string = context.payload.pull_request.head.ref
     const config = {
       ...defaults,
       ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
     }
 
     const labelsToAdd = Object.entries(config).reduce(
-      (labels, [label, patterns]) => {
+      (labels: string[], [label, patterns]) => {
         if (
           Array.isArray(patterns)
             ? patterns.some(pattern => matcher.isMatch(ref, pattern))
@@ -63,4 +65,4 @@ async function action(context = github.context) {
   }
 }
 
-module.exports = action
+export default action
