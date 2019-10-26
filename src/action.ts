@@ -38,7 +38,7 @@ async function action(context: Context = github.context) {
       )
     }
 
-    const ref: string = context.payload.pull_request.head.ref
+    const ref: string = context.ref
     const config = {
       ...defaults,
       ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
