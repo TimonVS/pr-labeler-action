@@ -29,7 +29,7 @@ async function action(context: Pick<Context, 'payload' | 'ref'> = github.context
 
     const config = {
       ...defaults,
-      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, github.context.sha))
+      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo))
     }
 
     const branchName: string = context.payload.pull_request.head.ref

@@ -8,13 +8,12 @@ export interface RepoInfo {
   repo: string
 }
 
-export default async function getConfig(github: GitHub, fileName: string, { owner, repo }: RepoInfo, ref: string) {
+export default async function getConfig(github: GitHub, fileName: string, { owner, repo }: RepoInfo) {
   try {
     const response = await github.repos.getContents({
       owner,
       repo,
-      path: path.posix.join(CONFIG_PATH, fileName),
-      ref
+      path: path.posix.join(CONFIG_PATH, fileName)
     })
 
     return parseConfig(response.data.content)
