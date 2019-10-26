@@ -14,6 +14,8 @@ const defaults = {
 
 async function action(context: Pick<Context, 'payload' | 'ref'> = github.context) {
   try {
+    core.info('without ref')
+
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
     const repoInfo: RepoInfo = {

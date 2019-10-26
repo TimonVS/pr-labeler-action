@@ -9867,14 +9867,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(__webpack_require__(622));
 const js_yaml_1 = __importDefault(__webpack_require__(414));
 const CONFIG_PATH = '.github';
-function getConfig(github, fileName, { owner, repo }, ref) {
+function getConfig(github, fileName, { owner, repo }) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const response = yield github.repos.getContents({
                 owner,
                 repo,
-                path: path_1.default.posix.join(CONFIG_PATH, fileName),
-                ref
+                path: path_1.default.posix.join(CONFIG_PATH, fileName)
             });
             return parseConfig(response.data.content);
         }
@@ -15183,6 +15182,7 @@ const defaults = {
 function action(context = github.context) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            core.info('without ref');
             const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
             const octokit = new github.GitHub(GITHUB_TOKEN);
             const repoInfo = {
@@ -15192,7 +15192,7 @@ function action(context = github.context) {
             if (!context.payload.pull_request) {
                 throw new Error("Payload doesn't contain `pull_request`. Make sure this Action is being triggered by a pull_request event (https://help.github.com/en/articles/events-that-trigger-workflows#pull-request-event-pull_request).");
             }
-            const config = Object.assign(Object.assign({}, defaults), (yield config_1.default(octokit, CONFIG_FILENAME, repoInfo, github.context.sha)));
+            const config = Object.assign(Object.assign({}, defaults), (yield config_1.default(octokit, CONFIG_FILENAME, repoInfo)));
             const branchName = context.payload.pull_request.head.ref;
             const labelsToAdd = Object.entries(config).reduce((labels, [label, patterns]) => {
                 if (Array.isArray(patterns)
