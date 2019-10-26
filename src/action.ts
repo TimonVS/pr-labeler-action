@@ -16,6 +16,14 @@ async function action(context: Pick<Context, 'payload' | 'ref'> = github.context
   try {
     core.info('without ref')
 
+    // @ts-ignore
+    core.info(context.repo.owner)
+    // @ts-ignore
+    core.info(context.repo.repo)
+
+    core.info(context.payload.repository!.owner.login)
+    core.info(context.payload.repository!.name)
+
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
     const repoInfo: RepoInfo = {
