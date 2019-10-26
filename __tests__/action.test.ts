@@ -1,6 +1,7 @@
 import nock from 'nock'
 import fs from 'fs'
 import action from '../src/action'
+import { Context } from '@actions/github/lib/context'
 
 nock.disableNetConnect()
 
@@ -19,7 +20,7 @@ describe('pr-labeler-action', () => {
 
     await action({
       payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' })
-    })
+    } as any)
     expect.assertions(1)
   })
 
@@ -37,7 +38,7 @@ describe('pr-labeler-action', () => {
 
     await action({
       payload: pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' })
-    })
+    } as any)
     expect.assertions(1)
   })
 
@@ -55,7 +56,7 @@ describe('pr-labeler-action', () => {
 
     await action({
       payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' })
-    })
+    } as any)
     expect.assertions(1)
   })
 
@@ -70,7 +71,7 @@ describe('pr-labeler-action', () => {
 
     await action({
       payload: pullRequestOpenedFixture({ ref: 'hello_world' })
-    })
+    } as any)
   })
 })
 

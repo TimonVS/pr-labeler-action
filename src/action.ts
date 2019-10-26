@@ -12,7 +12,7 @@ const defaults = {
   chore: 'chore/*'
 }
 
-async function action(context = github.context) {
+async function action(context: Context = github.context) {
   try {
     core.info(JSON.stringify(context.payload))
 
