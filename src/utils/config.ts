@@ -1,9 +1,12 @@
-import path from 'path';
-import yaml from 'js-yaml';
-import { GitHub } from '@actions/github';
+import path from 'path'
+import yaml from 'js-yaml'
+import { GitHub } from '@actions/github'
 const CONFIG_PATH = '.github'
 
-export interface RepoInfo { owner: string, repo: string };
+export interface RepoInfo {
+  owner: string
+  repo: string
+}
 
 export default async function getConfig(github: GitHub, fileName: string, { owner, repo }: RepoInfo, ref: string) {
   try {
