@@ -1,7 +1,5 @@
-import path from 'path'
 import yaml from 'js-yaml'
 import { GitHub } from '@actions/github'
-const CONFIG_PATH = '.github'
 
 export interface RepoInfo {
   owner: string
@@ -14,7 +12,7 @@ interface Config {
 
 export default async function getConfig(
   github: GitHub,
-  fileName: string,
+  path: string,
   { owner, repo }: RepoInfo,
   ref: string,
   defaultConfig: Config
@@ -23,7 +21,7 @@ export default async function getConfig(
     const response = await github.repos.getContents({
       owner,
       repo,
-      path: path.posix.join(CONFIG_PATH, fileName),
+      path,
       ref
     })
 
