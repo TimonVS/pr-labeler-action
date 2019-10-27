@@ -5,8 +5,7 @@ import matcher from 'matcher'
 import getConfig from './utils/config'
 import { RepoInfo } from './utils/config'
 
-const CONFIG_FILENAME = 'pr-labeler.yml'
-const defaults = {
+const defaultConfig = {
   feature: ['feature/*', 'feat/*'],
   fix: 'fix/*',
   chore: 'chore/*'
@@ -20,6 +19,7 @@ async function action(context: Pick<Context, 'payload'> = github.context) {
       owner: context.payload.repository!.owner.login,
       repo: context.payload.repository!.name
     }
+    const configPath = core.getInput('configuration-path', { required: true })
 
     if (!context.payload.pull_request) {
       throw new Error(
@@ -28,22 +28,22 @@ async function action(context: Pick<Context, 'payload'> = github.context) {
     }
 
     const ref: string = context.payload.pull_request.head.ref
-    const config = {
-      ...defaults,
-      ...(await getConfig(octokit, CONFIG_FILENAME, repoInfo, ref))
-    }
+    const config = await getConfig(octokit, configPath, repoInfo, ref, defaultConfig)
 
-    const labelsToAdd = Object.entries(config).reduce((labels: string[], [label, patterns]) => {
-      if (
-        Array.isArray(patterns)
-          ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-          : matcher.isMatch(ref, patterns)
-      ) {
-        labels.push(label)
-      }
+    const labelsToAdd = Object.entries(config).reduce(
+      (labels, [label, patterns]) => {
+        if (
+          Array.isArray(patterns)
+            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
+            : matcher.isMatch(ref, patterns)
+        ) {
+          labels.push(label)
+        }
 
-      return labels
-    }, [])
+        return labels
+      },
+      [] as string[]
+    )
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({

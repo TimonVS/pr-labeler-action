@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: TimonVS/pr-labeler-action@v3
+        with:
+          configuration-path: .github/pr-labeler.yml # optional, .github/pr-labeler.yml is the default value
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -42,6 +44,16 @@ Then if a pull request is opened with the branch name `feature/218-add-emoji-sup
 ### Wildcard branches in configuration
 
 You can use `*` as a wildcard for matching multiple branch names. See https://www.npmjs.com/package/matcher for more information about wildcard options.
+
+### Default configuration
+
+When no configuration is provided, the following defaults will be used:
+
+```yml
+feature: ['feature/*', 'feat/*'],
+fix: 'fix/*',
+chore: 'chore/*'
+```
 
 ## Contributors ✨
 

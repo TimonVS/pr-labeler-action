@@ -6,6 +6,12 @@ import action from '../src/action'
 nock.disableNetConnect()
 
 describe('pr-labeler-action', () => {
+  beforeEach(() => {
+    // configuration-path parameter is required
+    // parameters are exposed as environment variables: https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepswith
+    process.env['INPUT_CONFIGURATION-PATH'] = '.github/pr-labeler.yml'
+  })
+
   it('adds the "fix" label for "fix/510-logging" branch', async () => {
     nock('https://api.github.com')
       .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=fix%2F510-logging')
@@ -30,7 +36,7 @@ describe('pr-labeler-action', () => {
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
-          labels: ['feature']
+          labels: ['🎉 feature']
         })
         return true
       })
@@ -38,6 +44,24 @@ describe('pr-labeler-action', () => {
 
     await action({
       payload: pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' })
+    })
+    expect.assertions(1)
+  })
+
+  it('adds the "release" label for "release/2.0" branch', async () => {
+    nock('https://api.github.com')
+      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=release%2F2.0')
+      .reply(200, configFixture())
+      .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
+        expect(body).toMatchObject({
+          labels: ['release']
+        })
+        return true
+      })
+      .reply(200)
+
+    await action({
+      payload: pullRequestOpenedFixture({ ref: 'release/2.0' })
     })
     expect.assertions(1)
   })

@@ -1,6 +1,10 @@
 name: 'PR Labeler'
 description: 'Automatically labels your PRs based on branch name patterns like feature/* or fix/*.'
 author: 'Timon van Spronsen'
+inputs:
+  configuration-path:
+    description: 'The path for the label configurations'
+    default: '.github/pr-labeler.yml'
 branding:
   icon: 'tag'
   color: 'white'
