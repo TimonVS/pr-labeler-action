@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { Context } from '@actions/github/lib/context'
 import matcher from 'matcher'
-import getConfig from './utils/config'
+import getConfig, { Config } from './utils/config'
 
 const defaultConfig = {
   feature: ['feature/*', 'feat/*'],
@@ -24,21 +24,7 @@ async function action(context: Context = github.context) {
 
     const ref: string = context.payload.pull_request.head.ref
     const config = await getConfig(octokit, configPath, context.repo, ref, defaultConfig)
-
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels, [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
-
-        return labels
-      },
-      [] as string[]
-    )
+    const labelsToAdd = getLabelsToAdd(config, ref)
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({
@@ -55,6 +41,23 @@ async function action(context: Context = github.context) {
     core.error(error)
     core.setFailed(error.message)
   }
+}
+
+function getLabelsToAdd(config: Config, branchName: string): string[] {
+  return Object.entries(config).reduce(
+    (labels, [label, patterns]) => {
+      if (
+        Array.isArray(patterns)
+          ? patterns.some(pattern => matcher.isMatch(branchName, pattern))
+          : matcher.isMatch(branchName, patterns)
+      ) {
+        labels.push(label)
+      }
+
+      return labels
+    },
+    [] as string[]
+  )
 }
 
 export default action

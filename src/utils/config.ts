@@ -6,7 +6,7 @@ interface RepoInfo {
   repo: string
 }
 
-interface Config {
+export interface Config {
   [k: string]: string | string[]
 }
 
