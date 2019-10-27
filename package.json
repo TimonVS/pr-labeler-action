@@ -4,19 +4,23 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "build": "ncc build src/index.js -o dist",
+    "build": "ncc build src/index.ts -o dist",
     "test": "jest"
   },
   "dependencies": {
-    "@actions/core": "^1.1.1",
+    "@actions/core": "^1.2.0",
     "@actions/github": "^1.1.0",
     "matcher": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^12.11.5",
+    "@types/jest": "^24.0.20",
+    "@types/js-yaml": "^3.12.1",
+    "@types/node": "^12.11.7",
     "@zeit/ncc": "^0.20.5",
-    "jest": "^24.5.0",
+    "jest": "^24.9.0",
     "js-yaml": "^3.13.1",
-    "nock": "^10.0.6"
+    "nock": "^11.6.0",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.4"
   }
 }

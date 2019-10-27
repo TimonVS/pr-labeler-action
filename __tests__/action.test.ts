@@ -1,6 +1,7 @@
-const nock = require('nock')
-const fs = require('fs')
-const action = require('../src/action')
+import nock from 'nock'
+import fs from 'fs'
+import path from 'path'
+import action from '../src/action'
 
 nock.disableNetConnect()
 
@@ -98,7 +99,7 @@ describe('pr-labeler-action', () => {
   })
 })
 
-function encodeContent(content) {
+function encodeContent(content: Buffer) {
   return Buffer.from(content).toString('base64')
 }
 
@@ -109,7 +110,7 @@ function configFixture(fileName = 'config.yml') {
     size: 5362,
     name: fileName,
     path: `.github/${fileName}`,
-    content: encodeContent(fs.readFileSync(`./fixtures/${fileName}`)),
+    content: encodeContent(fs.readFileSync(path.join(__dirname, `fixtures/${fileName}`))),
     sha: '3d21ec53a331a6f037a91c368710b99387d012c1',
     url: 'https://api.github.com/repos/octokit/octokit.rb/contents/.github/release-drafter.yml',
     git_url: 'https://api.github.com/repos/octokit/octokit.rb/git/blobs/3d21ec53a331a6f037a91c368710b99387d012c1',
@@ -123,7 +124,7 @@ function configFixture(fileName = 'config.yml') {
   }
 }
 
-function pullRequestOpenedFixture({ ref }) {
+function pullRequestOpenedFixture({ ref }: { ref: string }) {
   return {
     pull_request: {
       number: 1,

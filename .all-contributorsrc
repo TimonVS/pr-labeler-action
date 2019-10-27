@@ -27,6 +27,15 @@
         "doc",
         "bug"
       ]
+    },
+    {
+      "login": "hugo-vrijswijk",
+      "name": "Hugo van Rijswijk",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/10114577?v=4",
+      "profile": "https://github.com/hugo-vrijswijk",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

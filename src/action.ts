@@ -1,9 +1,9 @@
-// @ts-check
-
-const core = require('@actions/core')
-const github = require('@actions/github')
-const matcher = require('matcher')
-const getConfig = require('./utils/config')
+import * as core from '@actions/core'
+import * as github from '@actions/github'
+import { Context } from '@actions/github/lib/context'
+import matcher from 'matcher'
+import getConfig from './utils/config'
+import { RepoInfo } from './utils/config'
 
 const defaultConfig = {
   feature: ['feature/*', 'feat/*'],
@@ -11,13 +11,13 @@ const defaultConfig = {
   chore: 'chore/*'
 }
 
-async function action(context = github.context) {
+async function action(context: Pick<Context, 'payload'> = github.context) {
   try {
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
-    const repoInfo = {
-      owner: context.payload.repository.owner.login,
-      repo: context.payload.repository.name
+    const repoInfo: RepoInfo = {
+      owner: context.payload.repository!.owner.login,
+      repo: context.payload.repository!.name
     }
     const configPath = core.getInput('configuration-path', { required: true })
 
@@ -27,20 +27,23 @@ async function action(context = github.context) {
       )
     }
 
-    const ref = context.payload.pull_request.head.ref
+    const ref: string = context.payload.pull_request.head.ref
     const config = await getConfig(octokit, configPath, repoInfo, ref, defaultConfig)
 
-    const labelsToAdd = Object.entries(config).reduce((labels, [label, patterns]) => {
-      if (
-        Array.isArray(patterns)
-          ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-          : matcher.isMatch(ref, patterns)
-      ) {
-        labels.push(label)
-      }
+    const labelsToAdd = Object.entries(config).reduce(
+      (labels, [label, patterns]) => {
+        if (
+          Array.isArray(patterns)
+            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
+            : matcher.isMatch(ref, patterns)
+        ) {
+          labels.push(label)
+        }
 
-      return labels
-    }, [])
+        return labels
+      },
+      [] as string[]
+    )
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({
@@ -59,4 +62,4 @@ async function action(context = github.context) {
   }
 }
 
-module.exports = action
+export default action
