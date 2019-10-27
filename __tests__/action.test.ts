@@ -9,9 +9,7 @@ nock.disableNetConnect()
 
 describe('pr-labeler-action', () => {
   beforeEach(() => {
-    // configuration-path parameter is required
-    // parameters are exposed as environment variables: https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepswith
-    process.env['INPUT_CONFIGURATION-PATH'] = '.github/pr-labeler.yml'
+    setupEnvironmentVariables()
   })
 
   it('adds the "fix" label for "fix/510-logging" branch', async () => {
@@ -138,4 +136,13 @@ function pullRequestOpenedFixture({ ref }: { ref: string }) {
       }
     }
   }
+}
+
+function setupEnvironmentVariables() {
+  // reset process.env otherwise `Context` will use those variables
+  process.env = {}
+
+  // configuration-path parameter is required
+  // parameters are exposed as environment variables: https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepswith
+  process.env['INPUT_CONFIGURATION-PATH'] = '.github/pr-labeler.yml'
 }
