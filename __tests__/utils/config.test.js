@@ -1,4 +1,4 @@
-const getConfig = require('../../src/utils/config')
+const getConfig = require('../../src/utils/config').default
 
 describe('getConfig', () => {
   it('returns default config when GitHub returns a 404 for given path', async () => {
@@ -10,7 +10,7 @@ describe('getConfig', () => {
       repos: {
         getContents() {
           const notFoundError = new Error()
-          notFoundError.code = 404
+          notFoundError.status = 404
           throw notFoundError
         }
       }
