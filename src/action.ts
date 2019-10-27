@@ -2,8 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { Context } from '@actions/github/lib/context'
 import matcher from 'matcher'
-import getConfig from './utils/config'
-import { RepoInfo } from './utils/config'
+import getConfig, { Config } from './utils/config'
 
 const defaultConfig = {
   feature: ['feature/*', 'feat/*'],
@@ -11,14 +10,10 @@ const defaultConfig = {
   chore: 'chore/*'
 }
 
-async function action(context: Pick<Context, 'payload'> = github.context) {
+async function action(context: Context = github.context) {
   try {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = new github.GitHub(GITHUB_TOKEN)
-    const repoInfo: RepoInfo = {
-      owner: context.payload.repository!.owner.login,
-      repo: context.payload.repository!.name
-    }
     const configPath = core.getInput('configuration-path', { required: true })
 
     if (!context.payload.pull_request) {
@@ -28,28 +23,14 @@ async function action(context: Pick<Context, 'payload'> = github.context) {
     }
 
     const ref: string = context.payload.pull_request.head.ref
-    const config = await getConfig(octokit, configPath, repoInfo, ref, defaultConfig)
-
-    const labelsToAdd = Object.entries(config).reduce(
-      (labels, [label, patterns]) => {
-        if (
-          Array.isArray(patterns)
-            ? patterns.some(pattern => matcher.isMatch(ref, pattern))
-            : matcher.isMatch(ref, patterns)
-        ) {
-          labels.push(label)
-        }
-
-        return labels
-      },
-      [] as string[]
-    )
+    const config = await getConfig(octokit, configPath, context.repo, ref, defaultConfig)
+    const labelsToAdd = getLabelsToAdd(config, ref)
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({
+        ...context.repo,
         number: context.payload.pull_request.number,
-        labels: labelsToAdd,
-        ...repoInfo
+        labels: labelsToAdd
       })
     }
   } catch (error) {
@@ -60,6 +41,23 @@ async function action(context: Pick<Context, 'payload'> = github.context) {
     core.error(error)
     core.setFailed(error.message)
   }
+}
+
+function getLabelsToAdd(config: Config, branchName: string): string[] {
+  return Object.entries(config).reduce(
+    (labels, [label, patterns]) => {
+      if (
+        Array.isArray(patterns)
+          ? patterns.some(pattern => matcher.isMatch(branchName, pattern))
+          : matcher.isMatch(branchName, patterns)
+      ) {
+        labels.push(label)
+      }
+
+      return labels
+    },
+    [] as string[]
+  )
 }
 
 export default action

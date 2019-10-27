@@ -1,12 +1,12 @@
 import yaml from 'js-yaml'
 import { GitHub } from '@actions/github'
 
-export interface RepoInfo {
+interface RepoInfo {
   owner: string
   repo: string
 }
 
-interface Config {
+export interface Config {
   [k: string]: string | string[]
 }
 
