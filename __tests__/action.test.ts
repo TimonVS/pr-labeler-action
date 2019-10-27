@@ -2,6 +2,8 @@ import nock from 'nock'
 import fs from 'fs'
 import path from 'path'
 import action from '../src/action'
+import { Context } from '@actions/github/lib/context'
+import { WebhookPayload } from '@actions/github/lib/interfaces'
 
 nock.disableNetConnect()
 
@@ -24,9 +26,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200)
 
-    await action({
-      payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' })
-    })
+    await action(new MockContext(pullRequestOpenedFixture({ ref: 'fix/510-logging' })))
     expect.assertions(1)
   })
 
@@ -42,9 +42,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200)
 
-    await action({
-      payload: pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' })
-    })
+    await action(new MockContext(pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' })))
     expect.assertions(1)
   })
 
@@ -60,9 +58,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200)
 
-    await action({
-      payload: pullRequestOpenedFixture({ ref: 'release/2.0' })
-    })
+    await action(new MockContext(pullRequestOpenedFixture({ ref: 'release/2.0' })))
     expect.assertions(1)
   })
 
@@ -78,9 +74,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200)
 
-    await action({
-      payload: pullRequestOpenedFixture({ ref: 'fix/510-logging' })
-    })
+    await action(new MockContext(pullRequestOpenedFixture({ ref: 'fix/510-logging' })))
     expect.assertions(1)
   })
 
@@ -93,11 +87,16 @@ describe('pr-labeler-action', () => {
       })
       .reply(200)
 
-    await action({
-      payload: pullRequestOpenedFixture({ ref: 'hello_world' })
-    })
+    await action(new MockContext(pullRequestOpenedFixture({ ref: 'hello_world' })))
   })
 })
+
+class MockContext extends Context {
+  constructor(payload: WebhookPayload) {
+    super()
+    this.payload = payload
+  }
+}
 
 function encodeContent(content: Buffer) {
   return Buffer.from(content).toString('base64')
