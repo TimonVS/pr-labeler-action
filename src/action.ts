@@ -45,11 +45,14 @@ async function action(context: Context = github.context) {
 
 function getLabelsToAdd(config: Config, branchName: string): string[] {
   return Object.entries(config).reduce(
-    (labels, [label, patterns]) => {
+
+    (labels, [label, pattern]) => {
+      const patterns = Array.isArray(pattern) ? pattern : [pattern]
+
       if (
-        Array.isArray(patterns)
-          ? patterns.some(pattern => matcher.isMatch(branchName, pattern))
-          : matcher.isMatch(branchName, patterns)
+        patterns.some(pattern => pattern.startsWith("!"))
+            ? patterns.every(pattern => matcher.isMatch(branchName, pattern))
+            : patterns.some(pattern => matcher.isMatch(branchName, pattern))
       ) {
         labels.push(label)
       }
