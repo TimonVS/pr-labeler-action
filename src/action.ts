@@ -7,9 +7,11 @@ import { Context } from '@actions/github/lib/context'
 import getConfig, { Config } from './utils/config'
 
 const defaultConfig = {
-  feature: ['feature/*', 'feat/*'],
-  fix: 'fix/*',
-  chore: 'chore/*'
+  feature: ['feature*', 'feat*', 'enhancement*'],
+  bug: 'fix*',
+  maintenance: ['chore*', 'style*', 'refactor*', 'build*', 'perf*', 'test*', 'ci*'],
+  documentation: 'docs*',
+  revert: 'revert*'
 }
 
 const action = async (context: Context = github.context) => {
@@ -17,16 +19,21 @@ const action = async (context: Context = github.context) => {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
     const octokit = github.getOctokit(GITHUB_TOKEN)
     const configPath = core.getInput('configuration-path', { required: true })
-
     if (!context.payload.pull_request) {
       throw new Error(
         "Payload doesn't contain `pull_request`. Make sure this Action is being triggered by a pull_request event (https://help.github.com/en/articles/events-that-trigger-workflows#pull-request-event-pull_request)."
       )
     }
 
-    const ref: string = context.payload.pull_request.head.ref
+    const pull = await octokit.pulls.get({
+      ...context.repo,
+      pull_number: context.payload.pull_request.number
+    })
+
+    const commitMessage: string = pull.data.title
+    const ref = context.payload.pull_request.head.ref
     const config = await getConfig(octokit, configPath, context.repo, ref, defaultConfig)
-    const labelsToAdd = getLabelsToAdd(config, ref)
+    const labelsToAdd = getLabelsToAdd(config, commitMessage)
 
     if (labelsToAdd.length > 0) {
       console.log(`Adding those labels: ${labelsToAdd}`)

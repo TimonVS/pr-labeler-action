@@ -12,10 +12,7 @@ jobs:
       with:
         node-version: 14
     - name: Install dependencies
-      run: npm ci
-      env:
-        CI: true
+      run: yarn install --prefer-offline --frozen-lockfile
+      timeout-minutes: 6
     - name: Run tests
-      run: npm test
-      env:
-        CI: true
+      run: yarn test

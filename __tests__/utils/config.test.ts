@@ -8,7 +8,7 @@ describe('getConfig', () => {
 
     const githubMock = {
       repos: {
-        getContents() {
+        getContent() {
           throw new HTTPError(404)
         }
       }
@@ -27,5 +27,5 @@ describe('getConfig', () => {
 })
 
 class HTTPError {
-  constructor(public status: number) {}
+  constructor(public status: number) { }
 }

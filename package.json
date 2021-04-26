@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./index.js",
     "build": "ncc build src/index.ts -o dist",
-    "test": "jest"
+    "test": "jest",
+    "test:dev": "jest --watchAll"
   },
   "dependencies": {
     "@actions/core": "^1.2.7",

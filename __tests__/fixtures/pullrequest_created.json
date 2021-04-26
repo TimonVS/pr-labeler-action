@@ -51,8 +51,8 @@
     "comments_url": "https://api.github.com/repos/Codertocat/Hello-World/issues/1/comments",
     "statuses_url": "https://api.github.com/repos/Codertocat/Hello-World/statuses/34c5c7793cb3b279e22454cb6750c80560547b3a",
     "head": {
-      "label": "Codertocat:fix/510-logging",
-      "ref": "fix/510-logging",
+      "label": "Codertocat:master",
+      "ref": "master",
       "sha": "34c5c7793cb3b279e22454cb6750c80560547b3a",
       "user": {
         "login": "Codertocat",

@@ -1,21 +1,26 @@
-import nock from 'nock'
 import fs from 'fs'
+import nock from 'nock'
 import path from 'path'
-import action from '../src/action'
+
 import { Context } from '@actions/github/lib/context'
 import { WebhookPayload } from '@actions/github/lib/interfaces'
+
+import action from '../src/action'
 
 nock.disableNetConnect()
 
 describe('pr-labeler-action', () => {
   beforeEach(() => {
+    nock.cleanAll()
     setupEnvironmentVariables()
   })
 
-  it('adds the "fix" label for "fix/510-logging" branch', async () => {
+  it('adds the "fix" label if a commit message match a custom config file', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=fix%2F510-logging')
+      .get('/repos/Codertocat/Hello-World/contents/.github%252Fhublo-pr-labeler.yml?ref=a')
       .reply(200, configFixture())
+      .get('/repos/Codertocat/Hello-World/pulls/1')
+      .reply(200, { title: 'fix/logging' })
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
           labels: ['fix']
@@ -24,14 +29,16 @@ describe('pr-labeler-action', () => {
       })
       .reply(200)
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'fix/510-logging' })))
+    await action(new MockContext(pullRequestOpenedFixture('a')))
     expect.assertions(1)
   })
 
-  it('adds the "feature" label for "feature/sign-in-page/101" branch', async () => {
+  it('adds the "feature" label if a commit message match a custom config file', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=feature%2Fsign-in-page%2F101')
+      .get('/repos/Codertocat/Hello-World/contents/.github%252Fhublo-pr-labeler.yml?ref=b')
       .reply(200, configFixture())
+      .get('/repos/Codertocat/Hello-World/pulls/1')
+      .reply(200, { title: 'feature/something' })
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
           labels: ['🎉 feature']
@@ -40,52 +47,58 @@ describe('pr-labeler-action', () => {
       })
       .reply(200)
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' })))
+    await action(new MockContext(pullRequestOpenedFixture('b')))
     expect.assertions(1)
   })
 
-  it('adds the "release" label for "release/2.0" branch', async () => {
+  it('adds the "feature" label for a commitizen formatted message', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=release%2F2.0')
-      .reply(200, configFixture())
+      .get('/repos/Codertocat/Hello-World/contents/.github%252Fhublo-pr-labeler.yml?ref=c')
+      .reply(404)
+      .get('/repos/Codertocat/Hello-World/pulls/1')
+      .reply(200, { title: 'feat(something): something else' })
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
-          labels: ['release']
+          labels: ['feature']
         })
         return true
       })
       .reply(200)
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'release/2.0' })))
+    await action(new MockContext(pullRequestOpenedFixture('c')))
     expect.assertions(1)
   })
 
   it('uses the default config when no config was provided', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=fix%2F510-logging')
+      .get('/repos/Codertocat/Hello-World/contents/.github%252Fhublo-pr-labeler.yml?ref=d')
       .reply(404)
+      .get('/repos/Codertocat/Hello-World/pulls/1')
+      .reply(200, { title: 'fix(bug): this is fixed' })
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         expect(body).toMatchObject({
-          labels: ['fix']
+          labels: ['bug']
         })
         return true
       })
       .reply(200)
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'fix/510-logging' })))
+    await action(new MockContext(pullRequestOpenedFixture('d')))
     expect.assertions(1)
   })
 
   it("adds no labels if the branch doesn't match any patterns", async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=hello_world')
-      .reply(200, configFixture())
+      .get('/repos/Codertocat/Hello-World/contents/.github%252Fhublo-pr-labeler.yml?ref=e')
+      .reply(404)
+      .get('/repos/Codertocat/Hello-World/pulls/1')
+      .reply(200, { title: 'this does not match anything' })
       .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
         throw new Error("Shouldn't edit labels")
       })
       .reply(200)
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'hello_world' })))
+    await action(new MockContext(pullRequestOpenedFixture('e')))
   })
 })
 
@@ -121,7 +134,7 @@ function configFixture(fileName = 'config.yml') {
   }
 }
 
-function pullRequestOpenedFixture({ ref }: { ref: string }) {
+function pullRequestOpenedFixture(ref: string) {
   return {
     pull_request: {
       number: 1,
@@ -140,9 +153,10 @@ function pullRequestOpenedFixture({ ref }: { ref: string }) {
 
 function setupEnvironmentVariables() {
   // reset process.env otherwise `Context` will use those variables
-  process.env = {}
-
   // configuration-path parameter is required
   // parameters are exposed as environment variables: https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepswith
-  process.env['INPUT_CONFIGURATION-PATH'] = '.github/pr-labeler.yml'
+  process.env = {
+    ['INPUT_CONFIGURATION-PATH']: '.github%2Fhublo-pr-labeler.yml',
+    GITHUB_TOKEN: 'this cannot be empty'
+  }
 }

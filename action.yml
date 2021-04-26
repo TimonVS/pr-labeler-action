@@ -1,10 +1,10 @@
 name: 'Hublo PR Labeler'
-description: 'Automatically labels your PRs based on branch name patterns like feature/* or fix/*.'
-author: 'Jonathan Jayet - formerly Timon van Spronsen'
+description: 'Automatically labels your PRs based on the commit message'
+author: 'Jonathan Jayet'
 inputs:
   configuration-path:
     description: 'The path for the label configurations'
-    default: '.github/pr-labeler.yml'
+    default: '.github/hublo-pr-labeler.yml'
 branding:
   icon: 'tag'
   color: 'white'
