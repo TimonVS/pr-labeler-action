@@ -25,7 +25,7 @@ export default async function getConfig(
       ref
     })
 
-    return parseConfig(response.data as unknown as string)
+    return parseConfig((response.data as unknown as { content: string }).content)
   } catch (error) {
     if (error.status === 404) {
       return defaultConfig
