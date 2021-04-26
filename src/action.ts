@@ -1,7 +1,9 @@
+import matcher from 'matcher'
+
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { Context } from '@actions/github/lib/context'
-import matcher from 'matcher'
+
 import getConfig, { Config } from './utils/config'
 
 const defaultConfig = {
@@ -10,10 +12,10 @@ const defaultConfig = {
   chore: 'chore/*'
 }
 
-async function action(context: Context = github.context) {
+const action = async (context: Context = github.context) => {
   try {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!
-    const octokit = new github.GitHub(GITHUB_TOKEN)
+    const octokit = github.getOctokit(GITHUB_TOKEN)
     const configPath = core.getInput('configuration-path', { required: true })
 
     if (!context.payload.pull_request) {
@@ -27,11 +29,14 @@ async function action(context: Context = github.context) {
     const labelsToAdd = getLabelsToAdd(config, ref)
 
     if (labelsToAdd.length > 0) {
+      console.log(`Adding those labels: ${labelsToAdd}`)
       await octokit.issues.addLabels({
         ...context.repo,
-        number: context.payload.pull_request.number,
+        issue_number: context.payload.pull_request.number,
         labels: labelsToAdd
       })
+    } else {
+      console.log('No label to add to this PR, moving on')
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'test') {
@@ -43,7 +48,7 @@ async function action(context: Context = github.context) {
   }
 }
 
-function getLabelsToAdd(config: Config, branchName: string): string[] {
+const getLabelsToAdd = (config: Config, branchName: string): string[] => {
   return Object.entries(config).reduce(
     (labels, [label, patterns]) => {
       if (

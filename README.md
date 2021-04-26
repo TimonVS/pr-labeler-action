@@ -43,7 +43,7 @@ Then if a pull request is opened with the branch name `feature/218-add-emoji-sup
 
 ### Wildcard branches in configuration
 
-You can use `*` as a wildcard for matching multiple branch names. See https://www.npmjs.com/package/matcher for more information about wildcard options.
+You can use `*` as a wildcard for matching multiple branch names. See <https://www.npmjs.com/package/matcher> for more information about wildcard options.
 
 ### Default configuration
 
