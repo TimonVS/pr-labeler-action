@@ -1,6 +1,6 @@
-name: 'PR Labeler'
+name: 'Hublo PR Labeler'
 description: 'Automatically labels your PRs based on branch name patterns like feature/* or fix/*.'
-author: 'Timon van Spronsen'
+author: 'Jonathan Jayet - formerly Timon van Spronsen'
 inputs:
   configuration-path:
     description: 'The path for the label configurations'

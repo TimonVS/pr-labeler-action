@@ -1,5 +1,5 @@
 {
-  "name": "pr-labeler-action",
+  "name": "hublo-labeler-action",
   "private": true,
   "main": "index.js",
   "scripts": {
