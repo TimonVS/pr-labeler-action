@@ -50,8 +50,8 @@ You can use `*` as a wildcard for matching multiple branch names. See https://ww
 When no configuration is provided, the following defaults will be used:
 
 ```yml
-feature: ['feature/*', 'feat/*'],
-fix: 'fix/*',
+feature: ['feature/*', 'feat/*']
+fix: 'fix/*'
 chore: 'chore/*'
 ```
 
