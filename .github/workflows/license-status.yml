@@ -3,7 +3,11 @@
 
 name: Check and Update Licenses Status
 
-on: pull_request
+on:
+  - pull_request
+  - push:
+    branches:
+      - master
 
 jobs:
   licensed:
