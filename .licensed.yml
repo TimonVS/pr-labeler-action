@@ -1,0 +1,17 @@
+# Config for https://github.com/github/licensed
+# Allow open-source licenses, scan npm packages
+
+sources:
+  npm: true
+
+allowed:
+  - apache-2.0
+  - bsd-2-clause
+  - bsd-3-clause
+  - isc
+  - mit
+  - cc0-1.0
+  - unlicense
+
+reviewed:
+  npm:

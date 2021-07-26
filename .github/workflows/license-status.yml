@@ -1,0 +1,29 @@
+# Updates the license cache, then checks that all dependencies have licenses specified in .licensed.yml
+# Uses https://github.com/jonabc/licensed-ci
+
+name: Check and Update Licenses Status
+
+on:
+  - pull_request
+  - push:
+    branches:
+      - master
+
+jobs:
+  licensed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # prefer to use a full fetch for licensed workflows
+
+      - run: npm install --production
+
+      - uses: jonabc/setup-licensed@v1
+        with:
+          version: '2.x'
+      - id: licensed
+        uses: jonabc/licensed-ci@v1
+        with:
+          workflow: branch
+          github_token: ${{ secrets.GITHUB_TOKEN }}
