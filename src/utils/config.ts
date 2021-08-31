@@ -36,5 +36,5 @@ export default async function getConfig(
 }
 
 function parseConfig(content: string): { [key: string]: string | string[] } {
-  return yaml.safeLoad(Buffer.from(content, 'base64').toString()) || {}
+  return yaml.load(Buffer.from(content, 'base64').toString()) || {}
 }
