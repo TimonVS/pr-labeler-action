@@ -1,13 +1,13 @@
-import yaml from 'js-yaml'
-import { GitHub } from '@actions/github'
+import yaml from 'js-yaml';
+import { GitHub } from '@actions/github';
 
 interface RepoInfo {
-  owner: string
-  repo: string
+  owner: string;
+  repo: string;
 }
 
 export interface Config {
-  [k: string]: string | string[]
+  [k: string]: string | string[];
 }
 
 export default async function getConfig(
@@ -22,19 +22,19 @@ export default async function getConfig(
       owner,
       repo,
       path,
-      ref
-    })
+      ref,
+    });
 
-    return parseConfig(response.data.content)
+    return parseConfig(response.data.content);
   } catch (error) {
     if (error.status === 404) {
-      return defaultConfig
+      return defaultConfig;
     }
 
-    throw error
+    throw error;
   }
 }
 
 function parseConfig(content: string): { [key: string]: string | string[] } {
-  return yaml.safeLoad(Buffer.from(content, 'base64').toString()) || {}
+  return yaml.safeLoad(Buffer.from(content, 'base64').toString()) || {};
 }

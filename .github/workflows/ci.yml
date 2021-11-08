@@ -6,16 +6,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js 12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - name: Install dependencies
-      run: npm ci
-      env:
-        CI: true
-    - name: Run tests
-      run: npm test
-      env:
-        CI: true
+      - uses: actions/checkout@v1
+      - name: Use Node.js 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install dependencies
+        run: npm ci
+        env:
+          CI: true
+      - name: Run tests
+        run: npm test
+        env:
+          CI: true

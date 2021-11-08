@@ -1,3 +1,3 @@
-import action from './action'
+import action from './action';
 
-action()
+action();
