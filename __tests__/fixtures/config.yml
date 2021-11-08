@@ -1,5 +1,5 @@
 '🎉 feature': ['feature/*', 'feat/*']
 fix: fix/*
 chore: chore/*
-release: ['release/*', '!release/skip-*']
+release: ['release/*', 'hotfix/*', '!release/skip-*']
 skip-release: release/skip-*

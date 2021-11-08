@@ -3,11 +3,12 @@ import * as github from '@actions/github'
 import { Context } from '@actions/github/lib/context'
 import matcher from 'matcher'
 import getConfig, { Config } from './utils/config'
+import { arrayify } from './utils/arrayify'
 
 const defaultConfig = {
   feature: ['feature/*', 'feat/*'],
   fix: 'fix/*',
-  chore: 'chore/*'
+  chore: 'chore/*',
 }
 
 async function action(context: Context = github.context) {
@@ -30,7 +31,7 @@ async function action(context: Context = github.context) {
       await octokit.issues.addLabels({
         ...context.repo,
         number: context.payload.pull_request.number,
-        labels: labelsToAdd
+        labels: labelsToAdd,
       })
     }
   } catch (error) {
@@ -44,23 +45,18 @@ async function action(context: Context = github.context) {
 }
 
 function getLabelsToAdd(config: Config, branchName: string): string[] {
-  return Object.entries(config).reduce(
+  const labelsToAdd: string[] = []
 
-    (labels, [label, pattern]) => {
-      const patterns = Array.isArray(pattern) ? pattern : [pattern]
+  for (const label in config) {
+    const patterns = arrayify(config[label])
+    const matches = matcher([branchName], patterns)
 
-      if (
-        patterns.some(pattern => pattern.startsWith("!"))
-            ? patterns.every(pattern => matcher.isMatch(branchName, pattern))
-            : patterns.some(pattern => matcher.isMatch(branchName, pattern))
-      ) {
-        labels.push(label)
-      }
+    if (matches.length > 0) {
+      labelsToAdd.push(label)
+    }
+  }
 
-      return labels
-    },
-    [] as string[]
-  )
+  return labelsToAdd
 }
 
 export default action

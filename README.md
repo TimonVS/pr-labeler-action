@@ -36,7 +36,6 @@ For example:
 feature: ['feature/*', 'feat/*']
 fix: fix/*
 chore: chore/*
-fixed-branch: fixed-branch-name
 ```
 
 Then if a pull request is opened with the branch name `feature/218-add-emoji-support` the Action will automatically apply the `feature` label.
@@ -44,21 +43,6 @@ Then if a pull request is opened with the branch name `feature/218-add-emoji-sup
 ### Wildcard branches in configuration
 
 You can use `*` as a wildcard for matching multiple branch names. See https://www.npmjs.com/package/matcher for more information about wildcard options.
-
-### Negative matcher
-
-You can also use `!` to add a label on all branches that does NOT match the pattern.
-
-Used in a list of patterns, then, the branch name will have to match all patterns.
-
-For example:
-
-```yml
-patch: ['update/*', '!update/sbt-*']
-no-release: update/sbt-*
-```
-
-In this scenario, a branch named `update/sbt-native-package` will only have the `no-release` label
 
 ### Default configuration
 
