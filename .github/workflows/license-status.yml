@@ -4,10 +4,12 @@
 name: Check and Update Licenses Status
 
 on:
-  - pull_request
-  - push:
+  push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   licensed:
