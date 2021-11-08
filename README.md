@@ -36,7 +36,6 @@ For example:
 feature: ['feature/*', 'feat/*']
 fix: fix/*
 chore: chore/*
-fixed-branch: fixed-branch-name
 ```
 
 Then if a pull request is opened with the branch name `feature/218-add-emoji-support` the Action will automatically apply the `feature` label.

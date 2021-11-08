@@ -76,6 +76,22 @@ describe('pr-labeler-action', () => {
     expect.assertions(1)
   })
 
+  it("adds only one label if the branch matches a negative pattern", async () => {
+    nock('https://api.github.com')
+        .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=release%2Fskip-this-one')
+        .reply(200, configFixture())
+        .post('/repos/Codertocat/Hello-World/issues/1/labels', body => {
+          expect(body).toMatchObject({
+            labels: ['skip-release']
+          })
+          return true
+        })
+        .reply(200)
+
+    await action(new MockContext(pullRequestOpenedFixture({ ref: 'release/skip-this-one' })))
+    expect.assertions(1)
+  })
+
   it("adds no labels if the branch doesn't match any patterns", async () => {
     nock('https://api.github.com')
       .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=hello_world')
