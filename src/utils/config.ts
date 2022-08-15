@@ -1,13 +1,20 @@
-import yaml from 'js-yaml';
 import { GitHub } from '@actions/github';
+import yaml from 'js-yaml';
 
 interface RepoInfo {
   owner: string;
   repo: string;
 }
 
+type BranchPattern = string | string[];
+
+type SpecificRefPatterns = {
+  head: BranchPattern;
+  base: BranchPattern;
+};
+
 export interface Config {
-  [k: string]: string | string[];
+  [k: string]: BranchPattern | SpecificRefPatterns;
 }
 
 export default async function getConfig(
@@ -35,6 +42,6 @@ export default async function getConfig(
   }
 }
 
-function parseConfig(content: string): { [key: string]: string | string[] } {
+function parseConfig(content: string): Config {
   return yaml.safeLoad(Buffer.from(content, 'base64').toString()) || {};
 }
