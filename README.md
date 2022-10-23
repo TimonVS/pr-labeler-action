@@ -22,6 +22,7 @@ jobs:
       - uses: TimonVS/pr-labeler-action@v3
         with:
           configuration-path: .github/pr-labeler.yml # optional, .github/pr-labeler.yml is the default value
+          require-labeling: true # optional, false is the default value. Github Action fails if none of labels defined in config yml is matched nor manually assigned
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```

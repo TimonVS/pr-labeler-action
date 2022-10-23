@@ -16,6 +16,7 @@ async function action(context: Context = github.context) {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
     const octokit = new github.GitHub(GITHUB_TOKEN);
     const configPath = core.getInput('configuration-path', { required: true });
+    const requireLabeling = core.getInput('require-labeling', { required: true });
 
     if (!context.payload.pull_request) {
       throw new Error(
@@ -33,6 +34,20 @@ async function action(context: Context = github.context) {
         number: context.payload.pull_request.number,
         labels: labelsToAdd,
       });
+    } else if (labelsToAdd.length === 0 && requireLabeling === 'true') {
+      const labels: string[] = Object.keys(config);
+
+      const { data: issueLabelObjects } = await octokit.issues.listLabelsOnIssue({
+        ...context.repo,
+        number: context.payload.pull_request.number,
+      });
+      const issueLabels = issueLabelObjects.map((label) => label.name);
+
+      const labelMatches = matcher(labels, issueLabels);
+      if (labelMatches.length === 0) {
+        // throw an error if requireLabeling is true but none of expected labels is added
+        throw new Error("Nothing is matched even though labeling is required.");
+      }
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'test') {
