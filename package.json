@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.20",
     "@types/js-yaml": "^3.12.1",
-    "@types/node": "^12.11.7",
+    "@types/node": "^16.18.3",
     "@zeit/ncc": "^0.20.5",
     "jest": "^24.9.0",
     "js-yaml": "^3.13.1",
