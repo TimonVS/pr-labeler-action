@@ -35,10 +35,14 @@ For example:
 ```yml
 feature: ['feature/*', 'feat/*']
 fix: fix/*
-chore: chore/*
+chore :hammer:: chore/*
 ```
 
 Then if a pull request is opened with the branch name `feature/218-add-emoji-support` the Action will automatically apply the `feature` label.
+
+Similarly, if a pull requests is opened with the branch name `fix/weird-bug` or `chore/annual-refactoring-job`, the Action will apply the `fix` or `chore 🔨` label, respectively.
+
+If the label does not exist in your repo, a new one will be created (with no color and blank description), but it will not be permanently saved to the `github.com/<your_repo>/labels` page.
 
 ### Wildcard branches in configuration
 
