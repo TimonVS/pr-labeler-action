@@ -1,5 +1,12 @@
 '🎉 feature': ['feature/*', 'feat/*']
-fix: fix/*
 chore: chore/*
-release: ['release/*', 'hotfix/*', '!release/skip-*']
+release: ['release/*', '!release/skip-*']
 skip-release: release/skip-*
+fix: 
+  base: master
+  head: fix/*
+hot-fix:
+  base: release/*
+  head: fix/*
+website:
+  base: gh-pages

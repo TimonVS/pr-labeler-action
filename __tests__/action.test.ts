@@ -12,7 +12,7 @@ describe('pr-labeler-action', () => {
     setupEnvironmentVariables();
   });
 
-  it('adds the "fix" label for "fix/510-logging" branch', async () => {
+  it('adds the "fix" label to a PR that adds a fix in the master branch', async () => {
     nock('https://api.github.com')
       .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=fix%2F510-logging')
       .reply(200, configFixture())
@@ -24,7 +24,23 @@ describe('pr-labeler-action', () => {
       })
       .reply(200);
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'fix/510-logging' })));
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'fix/510-logging', base: 'master' })));
+    expect.assertions(1);
+  });
+
+  it('adds the "hot-fix" label to a PR that adds a fix in a release branch', async () => {
+    nock('https://api.github.com')
+      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=fix%2F510-logging')
+      .reply(200, configFixture())
+      .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
+        expect(body).toMatchObject({
+          labels: ['hot-fix'],
+        });
+        return true;
+      })
+      .reply(200);
+
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'fix/510-logging', base: 'release/2.0' })));
     expect.assertions(1);
   });
 
@@ -40,7 +56,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200);
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'feature/sign-in-page/101' })));
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'feature/sign-in-page/101', base: 'master' })));
     expect.assertions(1);
   });
 
@@ -56,7 +72,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200);
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'release/2.0' })));
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'release/2.0', base: 'master' })));
     expect.assertions(1);
   });
 
@@ -72,7 +88,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200);
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'fix/510-logging' })));
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'fix/510-logging', base: 'master' })));
     expect.assertions(1);
   });
 
@@ -88,7 +104,23 @@ describe('pr-labeler-action', () => {
       })
       .reply(200);
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'release/skip-this-one' })));
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'release/skip-this-one', base: 'master' })));
+    expect.assertions(1);
+  });
+
+  it('adds the "website" label to any PR that targets the "gh-pages" branch', async () => {
+    nock('https://api.github.com')
+      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=any-branch-name')
+      .reply(200, configFixture())
+      .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
+        expect(body).toMatchObject({
+          labels: ['website'],
+        });
+        return true;
+      })
+      .reply(200);
+
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'any-branch-name', base: 'gh-pages' })));
     expect.assertions(1);
   });
 
@@ -101,7 +133,7 @@ describe('pr-labeler-action', () => {
       })
       .reply(200);
 
-    await action(new MockContext(pullRequestOpenedFixture({ ref: 'hello_world' })));
+    await action(new MockContext(pullRequestOpenedFixture({ head: 'hello_world', base: 'master' })));
   });
 });
 
@@ -137,12 +169,15 @@ function configFixture(fileName = 'config.yml') {
   };
 }
 
-function pullRequestOpenedFixture({ ref }: { ref: string }) {
+function pullRequestOpenedFixture({ head, base }: { head: string; base: string }) {
   return {
     pull_request: {
       number: 1,
       head: {
-        ref,
+        ref: head,
+      },
+      base: {
+        ref: base,
       },
     },
     repository: {

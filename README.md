@@ -44,6 +44,35 @@ Then if a pull request is opened with the branch name `feature/218-add-emoji-sup
 
 You can use `*` as a wildcard for matching multiple branch names. See https://www.npmjs.com/package/matcher for more information about wildcard options.
 
+### Matching on the base branch
+
+By default, labeler will match specified patterns againts the head branch. If you want to match against the base branch instead, you can do so by using the `base` option.
+
+```yml
+website:
+  base: gh-pages
+```
+
+With the above configuration, if a pull request targeting the `gh-pages` branch is opened, the Action will automatically apply the `website` label regardless of its head branch name.
+
+#### Matching on both the head and base branches
+
+When both `head` and `base` options are specified, they will be combined in an "AND" statement. Meaning that the pull request needs to satisfy both head and base patterns in order to be attributed the label.
+
+```yml
+fix: 
+  base: master
+  head: fix/*
+hot-fix:
+  base: release/*
+  head: fix/*
+```
+
+Suppose the above configuration and a pull request whose head branch name is `fix/510-logging`:
+
+- If the PR is opened with `master` as target, the Action will add the "fix" label to it.
+- If the PR is opened with `release/1.2.3` as target, the Action will add the "hot-fix" label to it.
+
 ### Default configuration
 
 When no configuration is provided, the following defaults will be used:
