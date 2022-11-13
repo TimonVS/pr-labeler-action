@@ -26,7 +26,7 @@ export default async function getConfig(
     });
 
     return parseConfig(response.data.content);
-  } catch (error) {
+  } catch (error: any) {
     if (error.status === 404) {
       return defaultConfig;
     }

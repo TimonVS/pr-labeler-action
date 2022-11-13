@@ -34,7 +34,7 @@ async function action(context: Context = github.context) {
         labels: labelsToAdd,
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     if (process.env.NODE_ENV === 'test') {
       throw error;
     }
