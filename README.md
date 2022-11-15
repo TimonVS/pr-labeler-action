@@ -25,7 +25,7 @@ jobs:
       pull-requests: write # for TimonVS/pr-labeler-action to add labels in PR
     runs-on: ubuntu-latest
     steps:
-      - uses: TimonVS/pr-labeler-action@v3
+      - uses: TimonVS/pr-labeler-action@v4
         with:
           configuration-path: .github/pr-labeler.yml # optional, .github/pr-labeler.yml is the default value
         env:
