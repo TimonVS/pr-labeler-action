@@ -3,3 +3,4 @@ fix: fix/*
 chore: chore/*
 release: ['release/*', 'hotfix/*', '!release/skip-*']
 skip-release: release/skip-*
+dont-add: []

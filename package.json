@@ -13,7 +13,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "matcher": "^2.0.0"
+    "matcher": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.2.2",

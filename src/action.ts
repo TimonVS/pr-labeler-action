@@ -3,7 +3,6 @@ import * as github from '@actions/github';
 import { Context } from '@actions/github/lib/context';
 import matcher from 'matcher';
 import getConfig, { Config } from './utils/config';
-import { arrayify } from './utils/arrayify';
 
 const defaultConfig = {
   feature: ['feature/*', 'feat/*'],
@@ -48,8 +47,7 @@ function getLabelsToAdd(config: Config, branchName: string): string[] {
   const labelsToAdd: string[] = [];
 
   for (const label in config) {
-    const patterns = arrayify(config[label]);
-    const matches = matcher([branchName], patterns);
+    const matches = matcher(branchName, config[label]);
 
     if (matches.length > 0) {
       labelsToAdd.push(label);
