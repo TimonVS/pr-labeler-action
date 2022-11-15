@@ -14,7 +14,7 @@ const defaultConfig = {
 async function action(context: Context = github.context) {
   try {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
-    const octokit = new github.GitHub(GITHUB_TOKEN);
+    const octokit = github.getOctokit(GITHUB_TOKEN).rest;
     const configPath = core.getInput('configuration-path', { required: true });
 
     if (!context.payload.pull_request) {
@@ -30,7 +30,7 @@ async function action(context: Context = github.context) {
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({
         ...context.repo,
-        number: context.payload.pull_request.number,
+        issue_number: context.payload.pull_request.number,
         labels: labelsToAdd,
       });
     }

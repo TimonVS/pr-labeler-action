@@ -14,7 +14,7 @@ describe('pr-labeler-action', () => {
 
   it('adds the "fix" label for "fix/510-logging" branch', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=fix%2F510-logging')
+      .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=fix%2F510-logging')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
         expect(body).toMatchObject({
@@ -30,7 +30,7 @@ describe('pr-labeler-action', () => {
 
   it('adds the "feature" label for "feature/sign-in-page/101" branch', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=feature%2Fsign-in-page%2F101')
+      .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=feature%2Fsign-in-page%2F101')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
         expect(body).toMatchObject({
@@ -46,7 +46,7 @@ describe('pr-labeler-action', () => {
 
   it('adds the "release" label for "release/2.0" branch', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=release%2F2.0')
+      .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=release%2F2.0')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
         expect(body).toMatchObject({
@@ -62,7 +62,7 @@ describe('pr-labeler-action', () => {
 
   it('uses the default config when no config was provided', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=fix%2F510-logging')
+      .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=fix%2F510-logging')
       .reply(404)
       .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
         expect(body).toMatchObject({
@@ -78,7 +78,7 @@ describe('pr-labeler-action', () => {
 
   it('adds only one label if the branch matches a negative pattern', async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=release%2Fskip-this-one')
+      .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=release%2Fskip-this-one')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
         expect(body).toMatchObject({
@@ -94,7 +94,7 @@ describe('pr-labeler-action', () => {
 
   it("adds no labels if the branch doesn't match any patterns", async () => {
     nock('https://api.github.com')
-      .get('/repos/Codertocat/Hello-World/contents/.github/pr-labeler.yml?ref=hello_world')
+      .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=hello_world')
       .reply(200, configFixture())
       .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
         throw new Error("Shouldn't edit labels");
@@ -157,6 +157,9 @@ function pullRequestOpenedFixture({ ref }: { ref: string }) {
 function setupEnvironmentVariables() {
   // reset process.env otherwise `Context` will use those variables
   process.env = {};
+
+  // GITHUB_TOKEN is required for Octokit
+  process.env['GITHUB_TOKEN'] = '123';
 
   // configuration-path parameter is required
   // parameters are exposed as environment variables: https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepswith

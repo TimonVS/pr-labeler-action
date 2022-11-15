@@ -8,7 +8,7 @@ describe('getConfig', () => {
 
     const githubMock = {
       repos: {
-        getContents() {
+        getContent() {
           throw new HTTPError(404);
         },
       },
