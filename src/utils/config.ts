@@ -6,9 +6,7 @@ interface RepoInfo {
   repo: string;
 }
 
-export interface Config {
-  [k: string]: string | string[];
-}
+export type Config = Record<string, string | string[]>;
 
 export default async function getConfig(
   github: ReturnType<typeof getOctokit>['rest'],
@@ -40,8 +38,9 @@ export default async function getConfig(
   }
 }
 
-function parseConfig(content: string): { [key: string]: string | string[] } {
-  return yaml.safeLoad(Buffer.from(content, 'base64').toString()) || {};
+function parseConfig(content: string): Config {
+  const decodedContent = Buffer.from(content, 'base64').toString();
+  const parsedConfig = yaml.load(decodedContent);
+  // TODO: validate config
+  return parsedConfig as Config;
 }
-
-function err() {}
