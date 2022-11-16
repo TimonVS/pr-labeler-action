@@ -1,9 +1,9 @@
 ---
 name: universal-user-agent
-version: 2.0.3
+version: 6.0.0
 type: npm
 summary: Get a user agent string in both browser and node
-homepage: https://github.com/gr2m/universal-user-agent#readme
+homepage: 
 license: isc
 licenses:
 - sources: LICENSE.md
