@@ -6,7 +6,10 @@ on:
 jobs:
   pr-labeler:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # for TimonVS/pr-labeler-action to read config
+      pull-requests: write # for TimonVS/pr-labeler-action to add labels in PR
     steps:
-      - uses: TimonVS/pr-labeler-action@v3
+      - uses: TimonVS/pr-labeler-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
