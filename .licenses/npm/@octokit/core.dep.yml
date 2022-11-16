@@ -1,16 +1,16 @@
 ---
-name: nice-try
-version: 1.0.5
+name: "@octokit/core"
+version: 3.6.0
 type: npm
-summary: Tries to execute a function and discards any error that occurs
-homepage: https://github.com/electerious/nice-try
+summary: Extendable client for GitHub's REST & GraphQL APIs
+homepage: 
 license: mit
 licenses:
 - sources: LICENSE
   text: |
-    The MIT License (MIT)
+    The MIT License
 
-    Copyright (c) 2018 Tobias Reich
+    Copyright (c) 2019 Octokit contributors
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -29,4 +29,6 @@ licenses:
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
+- sources: README.md
+  text: "[MIT](LICENSE)"
 notices: []
