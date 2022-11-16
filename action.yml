@@ -2,8 +2,11 @@ name: 'PR Labeler'
 description: 'Automatically labels your PRs based on branch name patterns like feature/* or fix/*.'
 author: 'Timon van Spronsen'
 inputs:
+  repo-token:
+    description: 'Token for the repository. Can be passed in using `{{ secrets.GITHUB_TOKEN }}`'
+    default: ${{ github.token }}
   configuration-path:
-    description: 'The path for the label configurations'
+    description: 'Path to label configurations'
     default: '.github/pr-labeler.yml'
 branding:
   icon: 'tag'
