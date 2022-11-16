@@ -12,7 +12,7 @@ const defaultConfig = {
 
 async function action(context: Context = github.context) {
   try {
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN ?? core.getInput('repo-token', { required: true });
     const octokit = github.getOctokit(GITHUB_TOKEN).rest;
     const configPath = core.getInput('configuration-path', { required: true });
 
