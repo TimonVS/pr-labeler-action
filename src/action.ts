@@ -23,7 +23,7 @@ async function action(context: Context = github.context) {
     }
 
     let readConfigRef: string;
-    if (context.payload.pull_request.head.full_name === context.payload.pull_request.base.full_name) {
+    if (context.payload.pull_request.head.repo.full_name === context.payload.pull_request.base.repo.full_name) {
       readConfigRef = context.payload.pull_request.head.ref;
     } else {
       console.log("This pull request is from the forked repository. So read config from base.ref.")
