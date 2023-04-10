@@ -143,6 +143,15 @@ function pullRequestOpenedFixture({ ref }: { ref: string }) {
       number: 1,
       head: {
         ref,
+        repo: {
+          full_name: 'Codertocat/Hello-World',
+        }
+      },
+      base: {
+        ref: 'main',
+        repo: {
+          full_name: 'Codertocat/Hello-World',
+        }
       },
     },
     repository: {
