@@ -29,8 +29,9 @@ export default async function getConfig(
 
     throw new Error(`${path} does not point to a config file`);
   } catch (error: any) {
+    console.log(`Config file not found. owner=${owner}, repo=${repo}, path=${path}, ref=${ref}.`);
     if (error.status === 404) {
-      // TODO: add log
+      console.log(`Using default config.`);
       return defaultConfig;
     }
 
