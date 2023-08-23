@@ -8,6 +8,8 @@ inputs:
   configuration-path:
     description: 'Path to label configurations'
     default: '.github/pr-labeler.yml'
+  default-label:
+    description: 'If the branch name does not match the label configuration, use this tag'
 branding:
   icon: 'tag'
   color: 'white'
