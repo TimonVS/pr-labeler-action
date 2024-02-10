@@ -22,9 +22,17 @@ async function action(context: Context = github.context) {
       );
     }
 
-    const ref: string = context.payload.pull_request.head.ref;
-    const config = await getConfig(octokit, configPath, context.repo, ref, defaultConfig);
-    const labelsToAdd = getLabelsToAdd(config, ref);
+    let readConfigRef: string;
+    if (context.payload.pull_request.head.repo.full_name === context.payload.pull_request.base.repo.full_name) {
+      readConfigRef = context.payload.pull_request.head.ref;
+    } else {
+      console.log("This pull request is from the forked repository. So read config from base.ref.")
+      readConfigRef = context.payload.pull_request.base.ref;
+    }
+
+    const config = await getConfig(octokit, configPath, context.repo, readConfigRef, defaultConfig);
+    const headRef: string = context.payload.pull_request.head.ref;
+    const labelsToAdd = getLabelsToAdd(config, headRef);
 
     if (labelsToAdd.length > 0) {
       await octokit.issues.addLabels({

@@ -103,6 +103,22 @@ describe('pr-labeler-action', () => {
 
     await action(new MockContext(pullRequestOpenedFixture({ ref: 'hello_world' })));
   });
+
+  it('adds the "fix" label for "fix/510-logging" branch from forked repo', async () => {
+    nock('https://api.github.com')
+        .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=main')
+        .reply(200, configFixture())
+        .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
+          expect(body).toMatchObject({
+            labels: ['fix'],
+          });
+          return true;
+        })
+        .reply(200);
+
+    await action(new MockContext(pullRequestOpenedFixtureFromFork({ ref: 'fix/510-logging' })));
+    expect.assertions(1);
+  });
 });
 
 class MockContext extends Context {
@@ -143,6 +159,41 @@ function pullRequestOpenedFixture({ ref }: { ref: string }) {
       number: 1,
       head: {
         ref,
+        repo: {
+          full_name: 'Codertocat/Hello-World',
+        }
+      },
+      base: {
+        ref: 'main',
+        repo: {
+          full_name: 'Codertocat/Hello-World',
+        }
+      },
+    },
+    repository: {
+      name: 'Hello-World',
+      owner: {
+        login: 'Codertocat',
+      },
+    },
+  };
+}
+
+function pullRequestOpenedFixtureFromFork({ ref }: { ref: string }) {
+  return {
+    pull_request: {
+      number: 1,
+      head: {
+        ref,
+        repo: {
+          full_name: 'forked/Hello-World',
+        }
+      },
+      base: {
+        ref: 'main',
+        repo: {
+          full_name: 'Codertocat/Hello-World',
+        }
       },
     },
     repository: {
