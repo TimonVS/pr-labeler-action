@@ -92,6 +92,22 @@ describe('pr-labeler-action', () => {
     expect.assertions(1);
   });
 
+  it("adds the default-label if one has been provided and the branch doesn't match any patterns", async () => {
+    process.env['INPUT_DEFAULT-LABEL'] = 'unknown';
+    nock('https://api.github.com')
+      .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=wont_find_me')
+      .reply(404)
+      .post('/repos/Codertocat/Hello-World/issues/1/labels', (body) => {
+        expect(body).toMatchObject({
+          labels: ['unknown'],
+        });
+        return true;
+      })
+      .reply(200);
+
+    await action(new MockContext(pullRequestOpenedFixture({ ref: 'wont_find_me' })));
+  });
+
   it("adds no labels if the branch doesn't match any patterns", async () => {
     nock('https://api.github.com')
       .get('/repos/Codertocat/Hello-World/contents/.github%2Fpr-labeler.yml?ref=hello_world')
