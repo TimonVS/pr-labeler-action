@@ -19,7 +19,7 @@ describe('getConfig', () => {
       'path/to/config',
       { owner: 'repo-owner', repo: 'repo-name' },
       'ref',
-      defaultConfig
+      defaultConfig,
     );
 
     expect(config).toBe(defaultConfig);

@@ -14,5 +14,5 @@ branding:
   icon: 'tag'
   color: 'white'
 runs:
-  using: 'node16'
-  main: 'index.js'
+  using: 'node20'
+  main: 'dist/index.js'

@@ -13,7 +13,7 @@ export default async function getConfig(
   path: string,
   { owner, repo }: RepoInfo,
   ref: string,
-  defaultConfig: Config
+  defaultConfig: Config,
 ): Promise<Config> {
   try {
     const response = await github.repos.getContent({
